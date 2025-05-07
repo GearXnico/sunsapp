@@ -1,8 +1,8 @@
 # README
 
 sunsapp/
-    |- backend/     # Ruby on Rails bakend API
-    |- frontend/    # React frontend
+* |- backend/     # Ruby on Rails bakend API
+* |- frontend/    # React frontend
 
 ## backend
 
@@ -11,7 +11,8 @@ sunsapp/
 * Rails version: 8.0.2
 
 ### Dependencies
-*
+* HTTParty: For making HTTP requests to the backend.
+* Geocoder: For converting location names to coordinates (geocoding).
 
 ### Deployment
 
