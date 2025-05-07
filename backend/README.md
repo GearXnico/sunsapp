@@ -15,10 +15,10 @@
 * bundle install
 
 ### create database
-* rake db:create
+* rails db:create
 
 ### migrate database
-* rake db:migrate
+* rails db:migrate
 
 ### run server
 * rails s
