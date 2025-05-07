@@ -1,0 +1,2 @@
+class SunCycleDatum < ApplicationRecord
+end
