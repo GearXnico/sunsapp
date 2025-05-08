@@ -20,6 +20,7 @@ class SunCycleFetcher
     })
 
     return nil unless response.success?
+    debugger
 
     result = response.parsed_response["results"]
     {

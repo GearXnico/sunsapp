@@ -15,9 +15,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_170651) do
     t.string "location"
     t.date "start_date"
     t.date "end_date"
-    t.time "sunrise"
-    t.time "sunset"
-    t.time "golden_hour"
+    t.string "sunrise"
+    t.string "sunset"
+    t.string "golden_hour"
     t.float "lat"
     t.float "long"
     t.datetime "created_at", null: false
