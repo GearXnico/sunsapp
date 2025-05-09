@@ -1,14 +1,14 @@
 import { useState } from "react";
 import axios from "axios";
 
-const SearchForm = ({ setResults }) => {
+function SearchForm({ setResults, setLoading }) {
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (!location || !startDate || !endDate) {
       alert("Please fill in all fields.");
       return;
@@ -31,6 +31,7 @@ const SearchForm = ({ setResults }) => {
     }
 
     try {
+      setLoading(true);
       const res = await axios.get("http://localhost:3000/api/sun_cycle", {
         params: { location, start_date: startDate, end_date: endDate }
       });
@@ -58,6 +59,8 @@ const SearchForm = ({ setResults }) => {
       alert("Request error: " + error.message);
     }
     setResults([]); // clear previous results if there's an error
+    } finally {
+      setLoading(false);
     }
   };
 

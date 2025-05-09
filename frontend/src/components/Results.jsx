@@ -9,7 +9,7 @@ function Results(props) {
             <ResultsChart data={props.data} />
         </div>
         <div className='table-responsive'>
-            <table class="table table-color table-striped">
+            <table class="table table-striped table-color">
                 <thead>
                     <tr>
                         <th>Date</th>

@@ -5,7 +5,7 @@
   justify-content: center;
   align-self: center;
   flex-direction: column;
-  color: #FFD88C;
+  color: #FFD88C !important;
 }
 
 .app-container, .table-container {
@@ -14,7 +14,7 @@
   padding: 2%;
   margin: auto;
   transition: transform 0.6s ease, opacity 0.4s ease;
-  background-color:#5C84B9;
+  background-color:#5C84B9 !important;
   border-radius: 10px;
   opacity: 88%;
   font-weight: bold;
@@ -54,19 +54,19 @@ label {
 }
 
 .btn-primary {
-  background-color: #F99E66;
+  background-color: #F99E66 !important;
 }
 
 .btn-primary:hover {
-  background-color: #b85f28;
+  background-color: #b85f28 !important;
 }
 
 .table-color{
-  --bs-table-color: #FFD88C;
-  --bs-table-striped-color: #FFD88C;
-  --bs-table-bg: #142D4C;
-  --bs-table-striped-bg: #1F3F66;
-  border-color: #142D4C;
+  --bs-table-color: #FFD88C !important;
+  --bs-table-striped-color: #FFD88C !important;
+  --bs-table-bg: #142D4C !important;
+  --bs-table-striped-bg: #1F3F66 !important;
+  border-color: #142D4C !important;
 }
 
 .fade-in {
@@ -88,4 +88,44 @@ label {
   max-width: 900px;
   height: 300px;
   margin: auto;
+}
+
+.footer-text {
+  color: #7D91B0;
+}
+
+.footer-url,
+.footer-url:visited,
+.footer-url:hover,
+.footer-url:active {
+  color: #FFD88C !important;
+}
+
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(20, 45, 76, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  color: #FFD88C;
+  font-size: 1.2rem;
+}
+
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #F99E66;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
