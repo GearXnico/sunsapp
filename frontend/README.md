@@ -14,7 +14,12 @@
 
 * React-datepicker: A react component for date range selection.
 
-* React-bootstrap: For UI components.
+* bootstrap: For responsive UI components.
+
+* chart.js: For creating charts.
+
+* react-chartjs-2: For creating charts.
+
 
 ## Deployment
 
