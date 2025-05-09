@@ -17,13 +17,16 @@ class Api::SunCycleController < ApplicationController
     results = []
 
     # fetch sun cycle data for each day in the given range
-    (start_date..end_date).each do |date|
+    start_date.to_date.upto(end_date.to_date) do |date|
+      Rails.logger.debug "Fetching data for #{date}"
       existing = SunCycleData.find_by(location: location, start_date: date, end_date: date)
       if existing
+        Rails.logger.info "Found existing data for #{date}"
         results << existing
       else
         fetched = SunCycleFetcher.new(lat, lng, date, date).call
         if fetched
+          Rails.logger.info "Saving data for #{date}"
           record = SunCycleData.create(
             location: location,
             start_date: date,

@@ -1,38 +1,91 @@
-.App {
+.app {
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  min-height: 100vh;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-self: center;
+  flex-direction: column;
+  color: #FFD88C;
 }
 
-.App-link {
-  color: #61dafb;
+.app-container, .table-container {
+  width: 90%;
+  max-width: 900px;
+  padding: 2%;
+  margin: auto;
+  transition: transform 0.6s ease, opacity 0.4s ease;
+  background-color:#5C84B9;
+  border-radius: 10px;
+  opacity: 88%;
+  font-weight: bold;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@media (max-width: 768px) {
+  .app-container, .table-container {
+    width: 95%;
+    padding: 4%;
   }
+
+  label {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .moved-up {
+    transform: translateY(0px);
+  }
+
+  .moved-down {
+    margin-top: 20px;
+  }
+}
+
+.app-background {
+  background-image: url("./assets/landscape.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+
+label {
+  width: 100%;
+  margin-bottom: 5px;
+}
+
+.btn-primary {
+  background-color: #F99E66;
+}
+
+.btn-primary:hover {
+  background-color: #b85f28;
+}
+
+.table-color{
+  --bs-table-color: #FFD88C;
+  --bs-table-striped-color: #FFD88C;
+  --bs-table-bg: #142D4C;
+  --bs-table-striped-bg: #1F3F66;
+  border-color: #142D4C;
+}
+
+.fade-in {
+  transform: translateY(20px);
+  animation: fadeInUp 0.6s ease forwards;
+}
+
+@keyframes fadeInUp {
   to {
-    transform: rotate(360deg);
+    transform: translateY(0);
   }
+}
+
+.chart-container {
+  background-color: #142D4C;
+  color:#FFD88C;
+  font-weight: bold;
+  width: 100%;
+  max-width: 900px;
+  height: 300px;
+  margin: auto;
 }
