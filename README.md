@@ -17,6 +17,9 @@ sunsapp/
 
 ### Deployment
 
+#### go to backend directory
+* cd backend
+
 #### install Ruby dependencies
 * bundle install
 
@@ -47,6 +50,9 @@ sunsapp/
 
 ### Deployment
 
+#### go to frontend directory
+* cd frontend
+
 #### install npm or yarn dependencies
 * npm install 
 * (or) yarn install
@@ -54,3 +60,9 @@ sunsapp/
 #### run server
 * npm start
 * (or) yarn start
+
+## TODO
+
+- add nginx config
+- add dockerfile
+- add docker-compose
