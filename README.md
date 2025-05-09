@@ -66,3 +66,4 @@ sunsapp/
 - add nginx config
 - add dockerfile
 - add docker-compose
+- add tests
