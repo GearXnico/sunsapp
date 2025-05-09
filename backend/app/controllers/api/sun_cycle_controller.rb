@@ -1,15 +1,10 @@
 class Api::SunCycleController < ApplicationController
   def index
     location = params[:location].presence
-    start_date = params[:start_date]
-    end_date = params[:end_date]
+    start_date = params[:start_date].presence
+    end_date = params[:end_date].presence
 
     return render json: { error: "Missing parameters" }, status: :bad_request unless location && start_date && end_date
-
-    # # validate invalid/missing parameters
-    # if location.nil? || start_date.nil? || end_date.nil?
-    #   return render json: { error: "Invalid or missing parameters" }, status: :bad_request
-    # end
 
     if start_date.to_date > end_date.to_date
       return render json: { error: "Invalid date range" }, status: :bad_request
@@ -20,6 +15,13 @@ class Api::SunCycleController < ApplicationController
       end_date = Date.parse(end_date)
     rescue ArgumentError
       return render json: { error: "Invalid date format" }, status: :bad_request
+    end
+
+    max_allowed_date = Date.today >> (12 * 10)
+    if start_date > max_allowed_date
+      return render json: { error: "#{start_date.to_s} exceeds the allowed future limit (10 years from today)." }, status: :bad_request
+    elsif end_date > max_allowed_date
+      return render json: { error: "#{end_date.to_s} exceeds the allowed future limit (10 years from today)." }, status: :bad_request
     end
 
     # formatting location name
