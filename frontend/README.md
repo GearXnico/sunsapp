@@ -2,6 +2,9 @@
 
 ## Requirements
 * Node version: v20.15.0
+```bash
+    npm install -g node@20.15.0
+```
 * React version: 19.1.0
 * npm or yarn
 
