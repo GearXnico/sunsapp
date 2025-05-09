@@ -26,7 +26,7 @@ function App() {
         <div className="container">
           <span className="footer-text">
             Powered by{' '}
-            <a className="footer-url" href="https://github.com/nicolas-van/sunsapp">
+            <a className="footer-url" href="https://sunrisesunset.io/api/">
               SunriseSunset.io
             </a>
           </span>
