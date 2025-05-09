@@ -1,13 +1,29 @@
 class Api::SunCycleController < ApplicationController
   def index
-    location = params[:location]
+    location = params[:location].presence
     start_date = params[:start_date]
     end_date = params[:end_date]
 
-    # validate invalid/missing parameters
-    if location.nil? || start_date.nil? || end_date.nil?
-      return render json: { error: "Invalid or missing parameters" }, status: :bad_request
+    return render json: { error: "Missing parameters" }, status: :bad_request unless location && start_date && end_date
+
+    # # validate invalid/missing parameters
+    # if location.nil? || start_date.nil? || end_date.nil?
+    #   return render json: { error: "Invalid or missing parameters" }, status: :bad_request
+    # end
+
+    if start_date.to_date > end_date.to_date
+      return render json: { error: "Invalid date range" }, status: :bad_request
     end
+
+    begin
+      start_date = Date.parse(start_date)
+      end_date = Date.parse(end_date)
+    rescue ArgumentError
+      return render json: { error: "Invalid date format" }, status: :bad_request
+    end
+
+    # formatting location name
+    location = location.strip.split.map(&:capitalize)*' '
 
     # get coordinates from location name
     coordinates = Geocoder.search(location).first&.coordinates
@@ -38,11 +54,18 @@ class Api::SunCycleController < ApplicationController
             golden_hour: fetched[:golden_hour]
           )
           results << record
+        else
+          Rails.logger.warn("Sun data missing for #{date}")
         end
       end
     end
 
-    render json: results.as_json(only: [:location, :start_date, :end_date, :sunrise, :sunset, :golden_hour])
+    if results.empty?
+      Rails.logger.warn "No sun data found for given parameters"
+      render json: { error: "No sunrise or sunset data found for the given range date (#{start_date} to #{end_date}) and location (#{location})" }, status: :not_found
+    else
+      render json: results.as_json(only: [:location, :start_date, :end_date, :sunrise, :sunset, :golden_hour])
+    end
   rescue => e
     Rails.logger.error("Fetcher error: #{e.message}")
     render json: { error: "Server error: #{e.message}" }, status: :internal_server_error

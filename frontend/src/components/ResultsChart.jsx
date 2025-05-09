@@ -27,6 +27,7 @@ const ResultsChart = ({ data }) => {
         borderColor: "#FFD88C",
         backgroundColor: "#FFD88C",
         tension: 0.3,
+        spanGaps: true,
       },
       {
         label: "Sunset",
@@ -34,6 +35,7 @@ const ResultsChart = ({ data }) => {
         borderColor: "#5C84B9",
         backgroundColor: "#5C84B9",
         tension: 0.3,
+        spanGaps: true,
       },
       {
         label: "Golden Hour",
@@ -41,6 +43,7 @@ const ResultsChart = ({ data }) => {
         borderColor: "#F99E66",
         backgroundColor: "#F99E66",
         tension: 0.3,
+        spanGaps: true,
       },
     ],
   };
@@ -100,6 +103,7 @@ const ResultsChart = ({ data }) => {
 
 // Convert "HH:MM" to minutes since midnight
 const parseTime = (timeStr) => {
+  if (!timeStr || typeof timeStr !== "string") return null;
   const [hours, minutes] = timeStr.split(":").map(Number);
   return hours * 60 + minutes;
 };
