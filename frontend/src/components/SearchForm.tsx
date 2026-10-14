@@ -1,10 +1,10 @@
 import { useState, type FormEvent } from "react";
 import axios from "axios";
 import { fetchSunCycle } from "../api/client";
-import type { SunCycleDay } from "../api/types";
+import type { SunCycleResponse } from "../api/types";
 
 interface SearchFormProps {
-  setResults: (results: SunCycleDay[]) => void;
+  setResults: (results: SunCycleResponse | null) => void;
   setLoading: (loading: boolean) => void;
 }
 
@@ -59,7 +59,7 @@ function SearchForm({ setResults, setLoading }: SearchFormProps) {
         // Something else went wrong
         alert("Request error: " + (error instanceof Error ? error.message : String(error)));
       }
-      setResults([]); // clear previous results if there's an error
+      setResults(null); // clear previous results if there's an error
     } finally {
       setLoading(false);
     }
