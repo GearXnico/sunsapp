@@ -46,4 +46,15 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # Checks Gemfile.lock against known vulnerabilities [https://github.com/rubysec/bundler-audit]
+  gem "bundler-audit", require: false
+end
+
+group :test do
+  # Blocks real HTTP and stubs external APIs [https://github.com/bblimke/webmock]
+  gem "webmock"
+
+  # Code coverage report [https://github.com/simplecov-ruby/simplecov]
+  gem "simplecov", require: false
 end
