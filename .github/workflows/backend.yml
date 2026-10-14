@@ -1,0 +1,54 @@
+name: Backend
+
+on:
+  pull_request:
+  push:
+    branches: [develop, main]
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    working-directory: backend
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          working-directory: backend
+          ruby-version: .ruby-version # resolved inside working-directory
+          bundler-cache: true
+      - name: Run tests (SimpleCov fails below 80 %)
+        run: bin/rails db:prepare && bin/rails test
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          working-directory: backend
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: RuboCop
+        run: bin/rubocop -f github
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ruby/setup-ruby@v1
+        with:
+          working-directory: backend
+          ruby-version: .ruby-version
+          bundler-cache: true
+      - name: Brakeman
+        run: bin/brakeman --no-pager
+      - name: bundler-audit
+        run: bundle exec bundler-audit check --update
