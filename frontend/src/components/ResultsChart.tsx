@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Chart as ChartJS,
   LineElement,
@@ -7,18 +6,26 @@ import {
   LinearScale,
   Tooltip,
   Legend,
+  type ChartData,
+  type ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import type { SunCycleDay } from "../api/types";
+import { formatTime, parseTime } from "../lib/time";
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const ResultsChart = ({ data }) => {
-  const labels = data.map(entry => entry.start_date);
-  const sunriseData = data.map(entry => parseTime(entry.sunrise));
-  const sunsetData = data.map(entry => parseTime(entry.sunset));
-  const goldenData = data.map(entry => parseTime(entry.golden_hour));  
+interface ResultsChartProps {
+  data: SunCycleDay[];
+}
 
-  const chartData = {
+const ResultsChart = ({ data }: ResultsChartProps) => {
+  const labels = data.map((entry) => entry.start_date);
+  const sunriseData = data.map((entry) => parseTime(entry.sunrise));
+  const sunsetData = data.map((entry) => parseTime(entry.sunset));
+  const goldenData = data.map((entry) => parseTime(entry.golden_hour));
+
+  const chartData: ChartData<"line", (number | null)[], string> = {
     labels,
     datasets: [
       {
@@ -48,33 +55,26 @@ const ResultsChart = ({ data }) => {
     ],
   };
 
-  const options = {
+  const options: ChartOptions<"line"> = {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: { 
-        position: "top" ,
-        color: "#FFD88C",
-        labels: { 
-            font: { weight: "bold" }
+      legend: {
+        position: "top",
+        labels: {
+          font: { weight: "bold" },
         },
-        title: { 
-            color: "#FFD88C",
-            font: { weight: "bold" }
-        }
-        },
+      },
       tooltip: {
         callbacks: {
-          label: function (context) {
-            return formatTime(context.raw);
-          },
+          label: (context) => formatTime(context.raw as number),
         },
       },
     },
     scales: {
       y: {
         ticks: {
-          callback: (val) => formatTime(val),
+          callback: (val) => formatTime(Number(val)),
           color: "#FFD88C",
         },
         title: {
@@ -99,20 +99,6 @@ const ResultsChart = ({ data }) => {
   };
 
   return <Line data={chartData} options={options} />;
-};
-
-// Convert "HH:MM" to minutes since midnight
-const parseTime = (timeStr) => {
-  if (!timeStr || typeof timeStr !== "string") return null;
-  const [hours, minutes] = timeStr.split(":").map(Number);
-  return hours * 60 + minutes;
-};
-
-// Convert minutes since midnight back to "HH:MM"
-const formatTime = (minutes) => {
-  const h = Math.floor(minutes / 60).toString().padStart(2, "0");
-  const m = (minutes % 60).toString().padStart(2, "0");
-  return `${h}:${m}`;
 };
 
 export default ResultsChart;
