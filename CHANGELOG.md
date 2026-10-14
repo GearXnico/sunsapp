@@ -4,6 +4,22 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.7] - 2026-10-14
+
+### Added
+
+- Backend characterization tests for `GET /api/sun_cycle`, `SunCycleFetcher` and `SunCycleData`, with WebMock (no real HTTP), the Geocoder test lookup and SimpleCov (80 % minimum).
+- Backend CI workflow at the repo root: tests, RuboCop, Brakeman and bundler-audit.
+- ADR 0004 (tests and CI).
+
+### Changed
+
+- Gems updated for bundler-audit: Rails 8.0.5.1, httparty 0.24, **puma 8 (major bump required by a security advisory)**, Brakeman 8.1; json stays on 2.x because json 3 breaks Rails 8.0 rendering.
+
+### Removed
+
+- Unused mailers, jobs, Kamal deployment files and the ignored `backend/.github/` folder.
+
 ## [0.1.6] - 2026-10-14
 
 ### Changed
@@ -23,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - `class` replaced by `className` in the results table.
+
 ## [0.1.5] - 2026-10-14
 
 ### Added
