@@ -17,7 +17,7 @@ git-flow with rebase & merge as the only merge method (ADR 0002). One plan task 
    git fetch origin
    git switch -c <type>/<short-name> origin/develop
    ```
-   Types: `feature/`, `fix/`, `refactor/`, `chore/`, `docs/`. Names are lowercase, hyphenated, 2 to 4 English words, e.g. `fix/request-validation`. `hotfix/*` branches from `origin/main` instead, and `release/*` is handled by the `release` skill.
+   Types: `feature/`, `fix/`, `refactor/`, `chore/`, `docs/`. Names are lowercase, hyphenated, 2 to 4 English words, e.g. `fix/request-validation`. `hotfix/*` branches from `origin/main` instead: its PR targets `main`, and after Nico merges it a second PR brings `main` back into `develop`. `release/*` is handled by the `release` skill.
 
 ## Work
 
