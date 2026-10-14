@@ -6,54 +6,24 @@ import {
   LinearScale,
   Tooltip,
   Legend,
-  type ChartData,
   type ChartOptions,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import type { SunCycleDay } from "../api/types";
-import { formatTime, parseTime } from "../lib/time";
+import type { SunCycleResponse } from "../api/types";
+import { buildChartData } from "../lib/chartData";
+import { formatTime, formatUtcOffset } from "../lib/time";
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 interface ResultsChartProps {
-  data: SunCycleDay[];
+  data: SunCycleResponse;
 }
 
-const ResultsChart = ({ data }: ResultsChartProps) => {
-  const labels = data.map((entry) => entry.start_date);
-  const sunriseData = data.map((entry) => parseTime(entry.sunrise));
-  const sunsetData = data.map((entry) => parseTime(entry.sunset));
-  const goldenData = data.map((entry) => parseTime(entry.golden_hour));
+const MINUTES_PER_DAY = 24 * 60;
+const TICK_STEP = 3 * 60;
 
-  const chartData: ChartData<"line", (number | null)[], string> = {
-    labels,
-    datasets: [
-      {
-        label: "Sunrise",
-        data: sunriseData,
-        borderColor: "#FFD88C",
-        backgroundColor: "#FFD88C",
-        tension: 0.3,
-        spanGaps: true,
-      },
-      {
-        label: "Sunset",
-        data: sunsetData,
-        borderColor: "#5C84B9",
-        backgroundColor: "#5C84B9",
-        tension: 0.3,
-        spanGaps: true,
-      },
-      {
-        label: "Golden Hour",
-        data: goldenData,
-        borderColor: "#F99E66",
-        backgroundColor: "#F99E66",
-        tension: 0.3,
-        spanGaps: true,
-      },
-    ],
-  };
+const ResultsChart = ({ data }: ResultsChartProps) => {
+  const { timezone, days } = data;
 
   const options: ChartOptions<"line"> = {
     responsive: true,
@@ -67,19 +37,27 @@ const ResultsChart = ({ data }: ResultsChartProps) => {
       },
       tooltip: {
         callbacks: {
-          label: (context) => formatTime(context.raw as number),
+          label: (context) => {
+            const day = days[context.dataIndex];
+            const offset = day ? ` (${formatUtcOffset(day.utc_offset)})` : "";
+            const time = formatTime(context.parsed.y ?? 0);
+            return `${context.dataset.label}: ${time} ${timezone}${offset}`;
+          },
         },
       },
     },
     scales: {
       y: {
+        min: 0,
+        max: MINUTES_PER_DAY,
         ticks: {
+          stepSize: TICK_STEP,
           callback: (val) => formatTime(Number(val)),
           color: "#FFD88C",
         },
         title: {
           display: true,
-          text: "Time of Day",
+          text: `Local time (${timezone})`,
           color: "#FFD88C",
           font: { weight: "bold" },
         },
@@ -98,7 +76,7 @@ const ResultsChart = ({ data }: ResultsChartProps) => {
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return <Line data={buildChartData(days)} options={options} />;
 };
 
 export default ResultsChart;

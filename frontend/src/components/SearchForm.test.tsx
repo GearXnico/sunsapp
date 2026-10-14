@@ -4,7 +4,7 @@ import { AxiosError, AxiosHeaders } from "axios";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SearchForm from "./SearchForm";
 import { fetchSunCycle } from "../api/client";
-import { sunCycleDays } from "../test/fixtures";
+import { sunCycle } from "../test/fixtures";
 
 vi.mock("../api/client", () => ({ fetchSunCycle: vi.fn() }));
 
@@ -82,7 +82,7 @@ describe("SearchForm", () => {
   });
 
   it("calls the API and passes the results up", async () => {
-    fetchMock.mockResolvedValue(sunCycleDays);
+    fetchMock.mockResolvedValue(sunCycle);
     const { setResults, setLoading } = setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
@@ -91,7 +91,7 @@ describe("SearchForm", () => {
       start_date: "2026-06-21",
       end_date: "2026-06-22",
     });
-    expect(setResults).toHaveBeenCalledWith(sunCycleDays);
+    expect(setResults).toHaveBeenCalledWith(sunCycle);
     expect(setLoading).toHaveBeenNthCalledWith(1, true);
     expect(setLoading).toHaveBeenLastCalledWith(false);
   });
@@ -107,7 +107,7 @@ describe("SearchForm", () => {
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
     expect(alertSpy).toHaveBeenCalledWith(message);
-    expect(setResults).toHaveBeenCalledWith([]);
+    expect(setResults).toHaveBeenCalledWith(null);
   });
 
   it("alerts when the server does not respond", async () => {
