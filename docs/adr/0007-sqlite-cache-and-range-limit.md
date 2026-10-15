@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted (2026-10-14)
+Accepted (2026-10-14). The cache part (the `sun_cycle_data` table) is superseded by
+[ADR 0017](0017-rails-cache-for-sun-times-and-geocoding.md); the range limit still applies.
 
 ## Context
 
@@ -23,9 +24,9 @@ backend process and a few users.
 
 ## Decision
 
-- The cache is the `sun_cycle_data` table in SQLite, one row per place and day, keyed by `lat`
-  and `long` rounded to 4 decimals (about 11 m) and `start_date` (the day), with an index on the
-  three columns. The `location` column is no longer written; it is removed in a later PR
+- *Superseded by ADR 0017.* The cache is the `sun_cycle_data` table in SQLite, one row per place
+  and day, keyed by `lat` and `long` rounded to 4 decimals (about 11 m) and `start_date` (the
+  day), with an index on the three columns. The `location` column is no longer written; it is removed in a later PR
   (two-PR rule for removals).
 - A request covers at most 366 days (a leap year). Dates must be `YYYY-MM-DD` and at most 10 years
   ahead; anything else is a 400.
