@@ -1,2 +1,0 @@
-class SunCycleData < ApplicationRecord
-end
