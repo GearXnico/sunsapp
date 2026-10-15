@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.0.2"
+gem "rails", "~> 8.1.4"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
 # Use the Puma web server [https://github.com/puma/puma]
@@ -54,6 +54,9 @@ end
 group :test do
   # Blocks real HTTP and stubs external APIs [https://github.com/bblimke/webmock]
   gem "webmock"
+
+  # Minitest 6 moved mocks and stubs (Object#stub) to this gem [https://github.com/minitest/minitest-mock]
+  gem "minitest-mock"
 
   # Code coverage report [https://github.com/simplecov-ruby/simplecov]
   gem "simplecov", require: false
