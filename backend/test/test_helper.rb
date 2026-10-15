@@ -30,32 +30,26 @@ module ActiveSupport
       Geocoder::Lookup::Test.reset
     end
 
-    # Body of a SunriseSunset.io /json response for one day, as the API returns it.
-    def sunrise_sunset_body(date, sunrise: "7:46:34 AM", sunset: "5:42:11 PM", golden_hour: "5:05:40 PM")
+    # Body of a SunriseSunset.io /json response saved in test/fixtures/files/sunrise_sunset/.
+    def sunrise_sunset_fixture(name)
+      file_fixture("sunrise_sunset/#{name}.json").read
+    end
+
+    # Body of a one-day response with `time_format=24`, for edge cases the fixtures do not cover.
+    def sunrise_sunset_body(date, sunrise: "7:46:34", sunset: "17:42:11", golden_hour: "17:05:40",
+                            timezone: "America/Santiago", utc_offset: -240)
       {
         results: [
-          {
-            date: date.to_s,
-            sunrise: sunrise,
-            sunset: sunset,
-            first_light: "6:17:03 AM",
-            last_light: "7:11:42 PM",
-            dawn: "7:18:46 AM",
-            dusk: "6:09:59 PM",
-            solar_noon: "12:44:22 PM",
-            golden_hour: golden_hour,
-            day_length: "9:55:37",
-            timezone: "America/Santiago",
-            utc_offset: -240
-          }
+          { date: date.to_s, sunrise: sunrise, sunset: sunset, golden_hour: golden_hour,
+            solar_noon: "12:44:22", day_length: "9:55:37", timezone: timezone, utc_offset: utc_offset }
         ],
         status: "OK"
       }.to_json
     end
 
-    def stub_sunrise_sunset(date, status: 200, body: sunrise_sunset_body(date))
+    def stub_sunrise_sunset(start_date, end_date = start_date, status: 200, body: sunrise_sunset_body(start_date))
       stub_request(:get, "https://api.sunrisesunset.io/json")
-        .with(query: hash_including("date_start" => date.to_s, "date_end" => date.to_s))
+        .with(query: hash_including("date_start" => start_date.to_s, "date_end" => end_date.to_s))
         .to_return(status: status, body: body, headers: { "Content-Type" => "application/json" })
     end
   end

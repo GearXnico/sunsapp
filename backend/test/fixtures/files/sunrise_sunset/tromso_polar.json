@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "date": "2026-06-21",
+      "sunrise": null,
+      "sunset": null,
+      "first_light": null,
+      "last_light": null,
+      "dawn": null,
+      "dusk": null,
+      "solar_noon": "12:44:05",
+      "golden_hour": null,
+      "day_length": "24:00:00",
+      "timezone": "Europe/Oslo",
+      "utc_offset": 120
+    }
+  ],
+  "status": "OK"
+}

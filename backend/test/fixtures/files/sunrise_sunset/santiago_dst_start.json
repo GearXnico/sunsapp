@@ -1,0 +1,47 @@
+{
+  "results": [
+    {
+      "date": "2026-09-05",
+      "sunrise": "7:21:47",
+      "sunset": "18:51:02",
+      "first_light": "5:56:31",
+      "last_light": "20:16:18",
+      "dawn": "6:55:40",
+      "dusk": "19:17:09",
+      "solar_noon": "13:06:25",
+      "golden_hour": "18:17:38",
+      "day_length": "11:29:15",
+      "timezone": "America/Santiago",
+      "utc_offset": -240
+    },
+    {
+      "date": "2026-09-06",
+      "sunrise": "8:20:23",
+      "sunset": "19:51:43",
+      "first_light": "6:55:12",
+      "last_light": "21:16:54",
+      "dawn": "7:54:18",
+      "dusk": "20:17:48",
+      "solar_noon": "14:06:03",
+      "golden_hour": "19:18:21",
+      "day_length": "11:31:20",
+      "timezone": "America/Santiago",
+      "utc_offset": -180
+    },
+    {
+      "date": "2026-09-07",
+      "sunrise": "08:18:59",
+      "sunset": "19:52:24",
+      "first_light": "06:53:53",
+      "last_light": "21:17:30",
+      "dawn": "07:52:56",
+      "dusk": "20:18:27",
+      "solar_noon": "14:05:41",
+      "golden_hour": "19:19:03",
+      "day_length": "11:33:25",
+      "timezone": "America/Santiago",
+      "utc_offset": -180
+    }
+  ],
+  "status": "OK"
+}

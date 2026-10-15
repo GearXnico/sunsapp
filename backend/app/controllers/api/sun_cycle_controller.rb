@@ -32,41 +32,38 @@ class Api::SunCycleController < ApplicationController
     return render json: { error: "Invalid location" }, status: :bad_request unless coordinates
 
     lat, lng = coordinates
-    results = []
+    dates = start_date..end_date
+    cached = SunCycleData.where(location: location, start_date: dates).index_by(&:start_date)
 
-    # fetch sun cycle data for each day in the given range
-    start_date.to_date.upto(end_date.to_date) do |date|
-      Rails.logger.debug "Fetching data for #{date}"
-      existing = SunCycleData.find_by(location: location, start_date: date, end_date: date)
-      if existing
-        Rails.logger.info "Found existing data for #{date}"
-        results << existing
-      else
-        fetched = SunCycleFetcher.new(lat, lng, date, date).call
-        if fetched
-          Rails.logger.info "Saving data for #{date}"
-          record = SunCycleData.create(
-            location: location,
-            start_date: date,
-            end_date: date,
-            lat: lat,
-            long: lng,
-            sunrise: fetched[:sunrise],
-            sunset: fetched[:sunset],
-            golden_hour: fetched[:golden_hour]
-          )
-          results << record
-        else
-          Rails.logger.warn("Sun data missing for #{date}")
-        end
+    # fetch the missing days in one call and cache them
+    missing = dates.reject { |date| cached.key?(date) }
+    if missing.any?
+      fetched = SunCycleFetcher.new(lat, lng, missing.first, missing.last).call
+      Rails.logger.warn("Sun data missing for the requested range") unless fetched
+      fetched&.dig(:days)&.each do |day|
+        next if cached.key?(day[:date]) || !dates.cover?(day[:date])
+
+        cached[day[:date]] = SunCycleData.create!(
+          location: location, start_date: day[:date], end_date: day[:date], lat: lat, long: lng,
+          sunrise: day[:sunrise], sunset: day[:sunset], golden_hour: day[:golden_hour],
+          timezone: fetched[:timezone], utc_offset: day[:utc_offset]
+        )
       end
     end
 
-    if results.empty?
+    records = dates.filter_map { |date| cached[date] }
+    if records.empty?
       Rails.logger.warn "No sun data found for given parameters"
       render json: { error: "No sunrise or sunset data found for the given range date (#{start_date} to #{end_date}) and location (#{location})" }, status: :not_found
     else
-      render json: results.as_json(only: [ :location, :start_date, :end_date, :sunrise, :sunset, :golden_hour ])
+      render json: {
+        location: location,
+        timezone: records.first.timezone,
+        days: records.map do |record|
+          { date: record.start_date.iso8601, sunrise: record.sunrise, sunset: record.sunset,
+            golden_hour: record.golden_hour, utc_offset: record.utc_offset }
+        end
+      }
     end
   rescue => e
     Rails.logger.error("Fetcher error: #{e.message}")
