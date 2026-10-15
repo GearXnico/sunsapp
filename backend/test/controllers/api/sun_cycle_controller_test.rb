@@ -5,6 +5,8 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
   START = Date.new(2026, 9, 5)
   FINISH = Date.new(2026, 9, 7)
 
+  use_memory_cache
+
   setup do
     Geocoder::Lookup::Test.add_stub("Santiago", [ { "coordinates" => [ -33.4489, -70.6693 ] } ])
   end
@@ -56,9 +58,7 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
   test "returns local 24-hour times with the zone of the place across a DST change" do
     stub = stub_sunrise_sunset(START, FINISH, body: sunrise_sunset_fixture("santiago_dst_start"))
 
-    assert_difference -> { SunCycleData.count }, 3 do
-      get_sun_cycle(location: "santiago", start_date: START.to_s, end_date: FINISH.to_s)
-    end
+    get_sun_cycle(location: "santiago", start_date: START.to_s, end_date: FINISH.to_s)
 
     assert_response :success
     assert_equal(
@@ -108,9 +108,7 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
     first_body = json
 
-    assert_no_difference -> { SunCycleData.count } do
-      get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
-    end
+    get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
 
     assert_response :success
     assert_equal first_body, json
@@ -126,7 +124,6 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal %w[2026-09-05 2026-09-06 2026-09-07], json["days"].map { |day| day["date"] }
-    assert_equal 3, SunCycleData.count
     assert_requested first_day, times: 1
     assert_requested rest, times: 1
   end
@@ -137,7 +134,6 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: START.to_s)
 
     assert_response :not_found
-    assert_equal 0, SunCycleData.count
   end
 
   test "returns 400 when a date does not exist" do
@@ -209,7 +205,6 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal "Santiago, Chile", json["location"]
-    assert_equal 3, SunCycleData.count
     assert_requested stub, times: 1
   end
 
