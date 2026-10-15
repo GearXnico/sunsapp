@@ -20,6 +20,6 @@ Each ADR records one decision: its context, the options considered, the decision
 | [0014](0014-bilingual-ui.md) | Bilingual interface (Spanish and English) | Proposed |
 | [0015](0015-csv-export.md) | Export results to CSV | Proposed |
 | [0016](0016-ui-renewal.md) | User interface renewal | Proposed |
-| 0017 | Rails.cache for sun times and geocoding | Accepted |
+| [0017](0017-rails-cache-for-sun-times-and-geocoding.md) | Rails.cache for sun times and geocoding | Accepted |
 
 ADRs are numbered in the order they were written; 0001 to 0008 and 0017 come from the plan tasks that applied them.
