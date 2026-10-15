@@ -59,6 +59,9 @@ sunsapp/
 Target commands, introduced by T3 (backend) and T4 (frontend). Update this section if they change.
 
 ```bash
+# Everything locally (backend :3000, frontend :3001)
+docker compose up
+
 # Backend
 cd backend
 bundle install
