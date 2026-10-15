@@ -1,0 +1,43 @@
+# Local development: `docker compose up`, then open http://localhost:3001.
+# The API runs on http://localhost:3000. backend/Dockerfile is the production image
+# and is not used here.
+
+services:
+  backend:
+    # Full (not slim) image: it has the compilers that native gems need.
+    # Keep the version in sync with backend/.ruby-version.
+    image: ruby:4.0.7
+    working_dir: /rails
+    command: >
+      bash -c "bundle install &&
+               bin/rails db:prepare &&
+               rm -f tmp/pids/server.pid &&
+               bin/rails server -b 0.0.0.0 -p 3000"
+    environment:
+      CORS_ORIGINS: http://localhost:3001
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./backend:/rails
+      - bundle:/usr/local/bundle
+      - storage:/rails/storage
+
+  frontend:
+    # Matches frontend/.nvmrc.
+    image: node:24-alpine
+    working_dir: /app
+    command: sh -c "npm ci && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_URL: http://localhost:3000
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./frontend:/app
+      - node_modules:/app/node_modules
+    depends_on:
+      - backend
+
+volumes:
+  bundle:
+  storage:
+  node_modules:
