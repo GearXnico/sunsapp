@@ -23,7 +23,7 @@ Don't change an ADR decision on your own. If the code doesn't match a document, 
 
 ## Stack
 
-- **Backend:** Ruby 3.4.3, Rails 8.0 (API mode), SQLite, Minitest.
+- **Backend:** Ruby 4.0.7, Rails 8.1 (API mode), SQLite, Minitest.
 - **Frontend:** React 19, TypeScript in strict mode, Vite, Vitest, Chart.js.
 - **External APIs:** SunriseSunset.io (sun times) and Nominatim (geocoding).
 - **CI (continuous integration):** GitHub Actions in `.github/workflows/`.
