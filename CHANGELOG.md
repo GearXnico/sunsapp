@@ -4,6 +4,18 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.8] - 2026-10-15
+
+### Fixed
+
+- The chart parses only 24-hour `HH:MM` times; 12-hour and ISO 8601 times no longer plot wrong points or none.
+- Sun times are shown in the place's zone on a fixed 00:00-24:00 axis, with the zone in the axis title, tooltip and table, the offset per row when it changes (DST, daylight saving time) and gaps or dashes for missing times.
+- Search errors render inline under the form instead of `alert()`.
+
+### Added
+
+- ADR 0008 (chart time axis).
+
 ## [0.1.7] - 2026-10-14
 
 ### Added

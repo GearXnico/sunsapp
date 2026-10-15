@@ -1,10 +1,11 @@
 import { useState, type FormEvent } from "react";
 import axios from "axios";
 import { fetchSunCycle } from "../api/client";
-import type { SunCycleDay } from "../api/types";
+import ErrorMessage from "./ErrorMessage";
+import type { SunCycleResponse } from "../api/types";
 
 interface SearchFormProps {
-  setResults: (results: SunCycleDay[]) => void;
+  setResults: (results: SunCycleResponse | null) => void;
   setLoading: (loading: boolean) => void;
 }
 
@@ -12,24 +13,26 @@ function SearchForm({ setResults, setLoading }: SearchFormProps) {
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [errorMessage, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
 
     if (!location || !startDate || !endDate) {
-      alert("Please fill in all fields.");
+      setError("Please fill in all fields.");
       return;
     }
     if (!location.trim()) {
-      alert("Please enter a location.");
+      setError("Please enter a location.");
       return;
     }
     if (startDate > endDate) {
-      alert("Start date must be before end date.");
+      setError("Start date must be before end date.");
       return;
     }
     if (startDate.length !== 10 || endDate.length !== 10) {
-      alert("Please enter a valid date.");
+      setError("Please enter a valid date.");
       return;
     }
 
@@ -44,22 +47,22 @@ function SearchForm({ setResults, setLoading }: SearchFormProps) {
         // Error response from server
         const { status, data } = error.response;
         if (status === 400) {
-          alert(`Bad Request: ${data?.error}`);
+          setError(`Bad Request: ${data?.error}`);
         } else if (status === 404) {
-          alert(`Not Found: ${data?.error}`);
+          setError(`Not Found: ${data?.error}`);
         } else if (status === 500) {
-          alert(`Server Error: ${data?.error}`);
+          setError(`Server Error: ${data?.error}`);
         } else {
-          alert(`Unexpected error: ${data?.error || "Something went wrong."}`);
+          setError(`Unexpected error: ${data?.error || "Something went wrong."}`);
         }
       } else if (axios.isAxiosError(error) && error.request) {
         // No response received
-        alert("No response from server. Check your connection.");
+        setError("No response from server. Check your connection.");
       } else {
         // Something else went wrong
-        alert("Request error: " + (error instanceof Error ? error.message : String(error)));
+        setError("Request error: " + (error instanceof Error ? error.message : String(error)));
       }
-      setResults([]); // clear previous results if there's an error
+      setResults(null); // clear previous results if there's an error
     } finally {
       setLoading(false);
     }
@@ -103,6 +106,7 @@ function SearchForm({ setResults, setLoading }: SearchFormProps) {
         </div>
       </div>
       <button className="btn btn-primary w-100 mt-3">Search</button>
+      {errorMessage && <ErrorMessage message={errorMessage} />}
     </form>
   );
 }

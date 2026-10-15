@@ -4,7 +4,7 @@ import { AxiosError, AxiosHeaders } from "axios";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import SearchForm from "./SearchForm";
 import { fetchSunCycle } from "../api/client";
-import { sunCycleDays } from "../test/fixtures";
+import { sunCycle } from "../test/fixtures";
 
 vi.mock("../api/client", () => ({ fetchSunCycle: vi.fn() }));
 
@@ -42,10 +42,7 @@ function axiosError(status?: number, error?: string): AxiosError {
 }
 
 describe("SearchForm", () => {
-  let alertSpy: ReturnType<typeof vi.spyOn>;
-
   beforeEach(() => {
-    alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
     vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
@@ -59,7 +56,7 @@ describe("SearchForm", () => {
     form.noValidate = true;
     await fill("Santiago", "2026-06-21", "");
 
-    expect(alertSpy).toHaveBeenCalledWith("Please fill in all fields.");
+    expect(screen.getByRole("alert")).toHaveTextContent("Please fill in all fields.");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -68,7 +65,7 @@ describe("SearchForm", () => {
     form.noValidate = true;
     await fill("   ", "2026-06-21", "2026-06-22");
 
-    expect(alertSpy).toHaveBeenCalledWith("Please enter a location.");
+    expect(screen.getByRole("alert")).toHaveTextContent("Please enter a location.");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
@@ -77,12 +74,12 @@ describe("SearchForm", () => {
     form.noValidate = true;
     await fill("Santiago", "2026-06-22", "2026-06-21");
 
-    expect(alertSpy).toHaveBeenCalledWith("Start date must be before end date.");
+    expect(screen.getByRole("alert")).toHaveTextContent("Start date must be before end date.");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("calls the API and passes the results up", async () => {
-    fetchMock.mockResolvedValue(sunCycleDays);
+    fetchMock.mockResolvedValue(sunCycle);
     const { setResults, setLoading } = setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
@@ -91,7 +88,8 @@ describe("SearchForm", () => {
       start_date: "2026-06-21",
       end_date: "2026-06-22",
     });
-    expect(setResults).toHaveBeenCalledWith(sunCycleDays);
+    expect(setResults).toHaveBeenCalledWith(sunCycle);
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
     expect(setLoading).toHaveBeenNthCalledWith(1, true);
     expect(setLoading).toHaveBeenLastCalledWith(false);
   });
@@ -101,28 +99,48 @@ describe("SearchForm", () => {
     [404, "Not Found: Invalid date"],
     [500, "Server Error: Invalid date"],
     [422, "Unexpected error: Invalid date"],
-  ])("alerts the server error for status %i and clears results", async (status, message) => {
+  ])("shows the server error for status %i and clears results", async (status, message) => {
     fetchMock.mockRejectedValue(axiosError(status, "Invalid date"));
     const { setResults } = setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
-    expect(alertSpy).toHaveBeenCalledWith(message);
-    expect(setResults).toHaveBeenCalledWith([]);
+    expect(screen.getByRole("alert")).toHaveTextContent(message);
+    expect(setResults).toHaveBeenCalledWith(null);
   });
 
-  it("alerts when the server does not respond", async () => {
+  it("shows an error when the server does not respond", async () => {
     fetchMock.mockRejectedValue(axiosError());
     setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
-    expect(alertSpy).toHaveBeenCalledWith("No response from server. Check your connection.");
+    expect(screen.getByRole("alert")).toHaveTextContent("No response from server. Check your connection.");
   });
 
-  it("alerts other request errors", async () => {
+  it("shows other request errors", async () => {
     fetchMock.mockRejectedValue(new Error("boom"));
     setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
-    expect(alertSpy).toHaveBeenCalledWith("Request error: boom");
+    expect(screen.getByRole("alert")).toHaveTextContent("Request error: boom");
+  });
+
+  it("clears the previous error on a new search", async () => {
+    fetchMock.mockRejectedValueOnce(axiosError()).mockResolvedValueOnce(sunCycle);
+    setup();
+    await fill("Santiago", "2026-06-21", "2026-06-22");
+    expect(screen.getByRole("alert")).toBeInTheDocument();
+
+    await userEvent.setup().click(screen.getByRole("button", { name: "Search" }));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("never uses window.alert", async () => {
+    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
+    const { form } = setup();
+    form.noValidate = true;
+    await fill("", "", "");
+
+    expect(screen.getByRole("alert")).toHaveTextContent("Please fill in all fields.");
+    expect(alertSpy).not.toHaveBeenCalled();
   });
 });

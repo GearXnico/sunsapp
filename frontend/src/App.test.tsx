@@ -3,14 +3,14 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import App from "./App";
 import { fetchSunCycle } from "./api/client";
-import { sunCycleDays } from "./test/fixtures";
+import { sunCycle } from "./test/fixtures";
 
 vi.mock("./api/client", () => ({ fetchSunCycle: vi.fn() }));
 vi.mock("react-chartjs-2", () => ({ Line: () => <div data-testid="line-chart" /> }));
 
 describe("App", () => {
   it("shows the results after a search", async () => {
-    vi.mocked(fetchSunCycle).mockResolvedValue(sunCycleDays);
+    vi.mocked(fetchSunCycle).mockResolvedValue(sunCycle);
     const user = userEvent.setup();
     render(<App />);
 
