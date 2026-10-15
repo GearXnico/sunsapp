@@ -1,6 +1,6 @@
 class SunCycleFetcher
   include HTTParty
-  base_uri 'https://api.sunrisesunset.io'
+  base_uri "https://api.sunrisesunset.io"
   format :json
 
   def initialize(lat, long, start_date, end_date)
@@ -25,7 +25,7 @@ class SunCycleFetcher
     end
 
     result = response.parsed_response["results"]
-    
+
     if result.empty?
       return nil
     elsif result.first["sunrise"].nil? || result.first["sunset"].nil?

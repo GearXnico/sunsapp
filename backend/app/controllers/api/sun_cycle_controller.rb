@@ -19,13 +19,13 @@ class Api::SunCycleController < ApplicationController
 
     max_allowed_date = Date.today >> (12 * 10)
     if start_date > max_allowed_date
-      return render json: { error: "#{start_date.to_s} exceeds the allowed future limit (10 years from today)." }, status: :bad_request
+      return render json: { error: "#{start_date} exceeds the allowed future limit (10 years from today)." }, status: :bad_request
     elsif end_date > max_allowed_date
-      return render json: { error: "#{end_date.to_s} exceeds the allowed future limit (10 years from today)." }, status: :bad_request
+      return render json: { error: "#{end_date} exceeds the allowed future limit (10 years from today)." }, status: :bad_request
     end
 
     # formatting location name
-    location = location.strip.split.map(&:capitalize)*' '
+    location = location.strip.split.map(&:capitalize)*" "
 
     # get coordinates from location name
     coordinates = Geocoder.search(location).first&.coordinates
@@ -66,7 +66,7 @@ class Api::SunCycleController < ApplicationController
       Rails.logger.warn "No sun data found for given parameters"
       render json: { error: "No sunrise or sunset data found for the given range date (#{start_date} to #{end_date}) and location (#{location})" }, status: :not_found
     else
-      render json: results.as_json(only: [:location, :start_date, :end_date, :sunrise, :sunset, :golden_hour])
+      render json: results.as_json(only: [ :location, :start_date, :end_date, :sunrise, :sunset, :golden_hour ])
     end
   rescue => e
     Rails.logger.error("Fetcher error: #{e.message}")
