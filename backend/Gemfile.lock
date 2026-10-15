@@ -138,7 +138,10 @@ GEM
       net-smtp
     marcel (1.0.4)
     mini_mime (1.1.5)
-    minitest (5.25.5)
+    minitest (6.0.6)
+      drb (~> 2.0)
+      prism (~> 1.5)
+    minitest-mock (5.27.0)
     msgpack (1.8.5)
     multi_xml (0.9.1)
       bigdecimal (>= 3.1, < 5)
@@ -296,7 +299,7 @@ GEM
       concurrent-ruby (~> 1.0)
     unicode-display_width (3.1.4)
       unicode-emoji (~> 4.0, >= 4.0.4)
-    unicode-emoji (4.0.4)
+    unicode-emoji (4.3.0)
     uri (1.1.2)
     useragent (0.16.11)
     webmock (3.34.0)
@@ -327,6 +330,7 @@ DEPENDENCIES
   debug
   geocoder
   httparty
+  minitest-mock
   puma (>= 5.0)
   rack-cors
   rails (~> 8.1.4)
