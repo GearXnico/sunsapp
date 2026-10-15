@@ -4,6 +4,19 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.14] - 2026-10-15
+
+### Added
+
+- `docs/api.md`: the full contract of `GET /api/sun_cycle` (params, limits, 200 body, error messages, cache and CORS).
+- Proposed ADRs 0009 to 0016 (free deployment, geocoding provider, ambiguous places, rate limiting, extended chart, bilingual UI, CSV export and UI renewal) and an ADR index in `docs/adr/README.md`.
+
+### Changed
+
+- New root README for first-time visitors: features, quick start, repository map, request flow diagram, API example and quality commands.
+- Short, accurate `backend/README.md` and `frontend/README.md` replace the outdated Ruby 3.4.3/Rails 8.0.2 and Create React App ones.
+- `docs/architecture.md` and `CLAUDE.md` match the current folders, cache and commands.
+
 ## [0.1.13] - 2026-10-15
 
 ### Changed
