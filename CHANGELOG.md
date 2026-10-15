@@ -4,6 +4,24 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.10] - 2026-10-15
+
+### Fixed
+
+- `GET /api/sun_cycle` validates its params (strict `YYYY-MM-DD` dates, at most 366 days, location up to 200 characters) and answers 400 with a clear message.
+- A 500 answers a generic "Internal server error" and logs only the error class; the location is filtered from the logs.
+- Nominatim requests send a User-Agent and a timeout, and a geocoding outage is no longer reported as an invalid location.
+- CORS (cross-origin resource sharing) origins come from `CORS_ORIGINS` (default `http://localhost:3001`) and only `GET`, `HEAD` and `OPTIONS` are allowed.
+
+### Changed
+
+- The request logic moved from the controller to `backend/app/core/sun_cycle/` (`Query`, `Lookup`, `SunriseSunsetClient`, `GeocodingClient`).
+- The cache is indexed by coordinates and date.
+
+### Added
+
+- ADR 0007 (SQLite cache and range limit).
+
 ## [0.1.9] - 2026-10-15
 
 ### Fixed
