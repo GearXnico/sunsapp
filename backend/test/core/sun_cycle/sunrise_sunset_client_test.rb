@@ -1,13 +1,13 @@
 require "test_helper"
 
-class SunCycleFetcherTest < ActiveSupport::TestCase
+class SunCycle::SunriseSunsetClientTest < ActiveSupport::TestCase
   SANTIAGO = [ -33.4489, -70.6693 ].freeze
   DST_START = Date.new(2026, 9, 5)
   DST_END = Date.new(2026, 9, 7)
   JUNE_21 = Date.new(2026, 6, 21)
 
   def fetch(start_date = JUNE_21, end_date = start_date, coordinates: SANTIAGO)
-    SunCycleFetcher.new(*coordinates, start_date, end_date).call
+    SunCycle::SunriseSunsetClient.new(*coordinates, start_date..end_date).call
   end
 
   test "asks for 24-hour times for the whole range in one call" do
@@ -115,5 +115,35 @@ class SunCycleFetcherTest < ActiveSupport::TestCase
     stub_request(:get, %r{\Ahttps://api\.sunrisesunset\.io/json}).to_raise(HTTParty::Error)
 
     assert_nil fetch
+  end
+
+  test "returns nil when the response has no results key" do
+    stub_sunrise_sunset(JUNE_21, body: { status: "OK" }.to_json)
+
+    assert_nil fetch
+  end
+
+  test "returns nil when the body is not JSON" do
+    stub_sunrise_sunset(JUNE_21, body: "<html>oops</html>")
+
+    assert_nil fetch
+  end
+
+  test "skips results without a valid date" do
+    body = JSON.parse(sunrise_sunset_body(JUNE_21))
+    body["results"] << body["results"].first.merge("date" => "not-a-date")
+    stub_sunrise_sunset(JUNE_21, body: body.to_json)
+
+    assert_equal [ JUNE_21 ], fetch[:days].map { |day| day[:date] }
+  end
+
+  test "returns nil on a timeout" do
+    stub_request(:get, %r{\Ahttps://api\.sunrisesunset\.io/json}).to_timeout
+
+    assert_nil fetch
+  end
+
+  test "sets a request timeout" do
+    assert_equal 10, SunCycle::SunriseSunsetClient.default_options[:timeout]
   end
 end

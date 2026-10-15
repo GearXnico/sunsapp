@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_10_14_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_14_130000) do
   create_table "sun_cycle_data", force: :cascade do |t|
     t.string "location"
     t.date "start_date"
@@ -24,5 +24,6 @@ ActiveRecord::Schema[8.0].define(version: 2026_10_14_120000) do
     t.datetime "updated_at", null: false
     t.string "timezone"
     t.integer "utc_offset"
+    t.index ["lat", "long", "start_date"], name: "index_sun_cycle_data_on_lat_and_long_and_start_date"
   end
 end

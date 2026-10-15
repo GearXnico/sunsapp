@@ -1,4 +1,5 @@
 require "test_helper"
+require "minitest/mock"
 
 class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
   START = Date.new(2026, 9, 5)
@@ -137,5 +138,86 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :not_found
     assert_equal 0, SunCycleData.count
+  end
+
+  test "returns 400 when a date does not exist" do
+    get_sun_cycle(location: "Santiago", start_date: "2026-02-30", end_date: "2026-03-01")
+
+    assert_response :bad_request
+    assert_equal "Invalid date format", json["error"]
+  end
+
+  test "returns 400 when a date is not YYYY-MM-DD" do
+    get_sun_cycle(location: "Santiago", start_date: "05/09/2026", end_date: "2026-09-07")
+
+    assert_response :bad_request
+    assert_equal "Invalid date format", json["error"]
+  end
+
+  test "returns 400 when the range is longer than 366 days" do
+    get_sun_cycle(location: "Santiago", start_date: "2027-01-01", end_date: "2028-01-02")
+
+    assert_response :bad_request
+    assert_equal "Date range cannot exceed 366 days", json["error"]
+  end
+
+  test "returns 400 when a parameter is not a string" do
+    get_sun_cycle(location: [ "Santiago" ], start_date: START.to_s, end_date: FINISH.to_s)
+
+    assert_response :bad_request
+    assert_equal "Missing parameters", json["error"]
+  end
+
+  test "returns 400 when the location is too long" do
+    get_sun_cycle(location: "a" * 201, start_date: START.to_s, end_date: FINISH.to_s)
+
+    assert_response :bad_request
+    assert_equal "Invalid location", json["error"]
+  end
+
+  test "returns 404 when the API response has no results key" do
+    stub_sunrise_sunset(START, body: { status: "OK" }.to_json)
+
+    get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: START.to_s)
+
+    assert_response :not_found
+  end
+
+  test "returns a generic 500 and logs no internal details or location when the geocoder fails" do
+    logs = StringIO.new
+    logger = ActiveSupport::Logger.new(logs)
+    Rails.logger.broadcast_to(logger)
+
+    Geocoder.stub(:search, ->(*) { raise Timeout::Error, "upstream detail" }) do
+      get_sun_cycle(location: "Secret Street 123", start_date: START.to_s, end_date: START.to_s)
+    end
+
+    assert_response :internal_server_error
+    assert_equal({ "error" => "Internal server error" }, json)
+    assert_includes logs.string, "Timeout::Error"
+    refute_includes logs.string, "Secret Street"
+  ensure
+    Rails.logger.stop_broadcasting_to(logger)
+  end
+
+  test "shares the cache between names of the same place" do
+    Geocoder::Lookup::Test.add_stub("Santiago, Chile", [ { "coordinates" => [ -33.44888, -70.66932 ] } ])
+    stub = stub_sunrise_sunset(START, FINISH, body: sunrise_sunset_fixture("santiago_dst_start"))
+
+    get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
+    get_sun_cycle(location: "Santiago, Chile", start_date: START.to_s, end_date: FINISH.to_s)
+
+    assert_response :success
+    assert_equal "Santiago, Chile", json["location"]
+    assert_equal 3, SunCycleData.count
+    assert_requested stub, times: 1
+  end
+
+  test "allows CORS only from the configured origin" do
+    get api_sun_cycle_path, headers: { "Origin" => "http://localhost:3001" }
+    assert_equal "http://localhost:3001", response.headers["Access-Control-Allow-Origin"]
+
+    get api_sun_cycle_path, headers: { "Origin" => "https://evil.example" }
+    assert_nil response.headers["Access-Control-Allow-Origin"]
   end
 end
