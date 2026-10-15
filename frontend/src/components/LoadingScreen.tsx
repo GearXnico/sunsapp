@@ -1,5 +1,4 @@
-import React from 'react';
-import '../App.css';
+import "../App.css";
 
 function LoadingScreen() {
   return (
@@ -9,4 +8,5 @@ function LoadingScreen() {
     </div>
   );
 }
+
 export default LoadingScreen;

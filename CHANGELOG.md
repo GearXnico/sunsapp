@@ -4,6 +4,25 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.6] - 2026-10-14
+
+### Changed
+
+- Frontend migrated from Create React App to Vite 8 with React 19 and TypeScript strict; dev server on port 3001, build output in `dist/`.
+- The API URL comes from `VITE_API_URL` (default `http://localhost:3000`) through `src/api/client.ts`.
+
+### Added
+
+- Vitest and Testing Library suite with an 80 % line-coverage gate, ESLint flat config and the frontend CI workflow.
+- ADR 0005 (Vite and TypeScript).
+
+### Removed
+
+- CRA boilerplate and unused dependencies (`react-datepicker`, `is-obj`, `is-regexp`, `web-vitals`).
+
+### Fixed
+
+- `class` replaced by `className` in the results table.
 ## [0.1.5] - 2026-10-14
 
 ### Added
