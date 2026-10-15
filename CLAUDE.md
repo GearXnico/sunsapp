@@ -1,0 +1,145 @@
+# CLAUDE.md · sunsapp
+
+sunsapp takes a location and a date range and returns, for each day, the sunrise, the sunset and the golden hour, shown as a table and a chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results in SQLite.
+
+Chat with Nico in Spanish or English; both are fine. In Spanish, keep in English the technical terms the industry uses in English. When you use an acronym, add its meaning in parentheses the first time.
+
+Code, comments, documentation, commit messages, branch names and PR (pull request) text are in English.
+
+## Principles
+
+- **No overengineer.** Do the minimum that solves the task; no layers, abstractions or configuration "just in case".
+- **Keep it simple and secure.** Between two secure options, pick the simpler one. Security is never cut, but it is solved with the most direct thing that works.
+
+## Documents
+
+| Document | Purpose |
+|---|---|
+| `docs/architecture.md` | Components, request flow and folder map |
+| `docs/api.md` | Contract of `GET /api/sun_cycle` (coming in T9) |
+| `docs/adr/` | The why behind each decision (ADR, architecture decision record) |
+
+Don't change an ADR decision on your own. If the code doesn't match a document, ask first.
+
+## Stack
+
+- **Backend:** Ruby 3.4.3, Rails 8.0 (API mode), SQLite, Minitest.
+- **Frontend:** React 19, TypeScript in strict mode, Vite, Vitest, Chart.js.
+- **External APIs:** SunriseSunset.io (sun times) and Nominatim (geocoding).
+- **CI (continuous integration):** GitHub Actions in `.github/workflows/`.
+
+## Target structure
+
+The flow goes one way: component → API client → controller → core → external API. The model only stores (cache). The repo reaches this structure through tasks T3 to T7 of the plan.
+
+```
+sunsapp/
+├── .github/                   CI workflows and PR template
+├── .claude/skills/            project skills
+├── docs/                      architecture.md, api.md, adr/
+├── backend/                   Rails 8 API
+│   ├── app/controllers/api/   receives and validates the request, builds the response
+│   ├── app/core/sun_cycle/    query.rb (validates), lookup.rb (cache + API),
+│   │                          sunrise_sunset_client.rb, geocoding_client.rb
+│   ├── app/models/            SQLite cache
+│   └── test/                  mirrors app/ (controllers, core, models)
+├── frontend/                  React + TypeScript (Vite)
+│   └── src/
+│       ├── api/               HTTP client and SunCycleDay type (only place that knows the URL)
+│       ├── lib/               pure functions: time parsing and formatting
+│       ├── components/        SearchForm, Results, ResultsChart, LoadingScreen, ErrorMessage
+│       └── App.tsx            builds the screen and holds the state
+├── CHANGELOG.md
+├── CLAUDE.md
+└── README.md
+```
+
+## Commands
+
+Target commands, introduced by T3 (backend) and T4 (frontend). Update this section if they change.
+
+```bash
+# Backend
+cd backend
+bundle install
+bin/rails db:prepare
+bin/rails server                               # :3000
+bin/rails test                                 # SimpleCov, fails below 80 %
+bin/rubocop
+bin/brakeman --no-pager
+bundle exec bundler-audit check --update
+
+# Frontend
+cd frontend
+npm ci
+npm run dev                                    # Vite on :3001
+npm test                                       # Vitest
+npm run test:coverage                          # fails below 80 %
+npm run lint && npm run typecheck
+npm run build
+npm audit --audit-level=high
+```
+
+The frontend reads the API URL from `VITE_API_URL` (default `http://localhost:3000`).
+
+CI runs `.github/workflows/backend.yml` and `.github/workflows/frontend.yml` on every pull request and on push to `develop` and `main`.
+
+## Git flow (ADR 0002)
+
+**Branches**
+
+- `feature/*`, `fix/*`, `docs/*`, `chore/*` and `refactor/*` start from `develop`.
+- `hotfix/*` starts from `main`; `release/x.y.z` starts from `develop`.
+- Lowercase, hyphenated, 2 to 4 English words.
+- Never work directly on `develop` or `main`.
+
+**Pull requests and merges**
+
+- One PR per plan task, targeting `develop`, using the PR template (Before, After, How to test, Checklist).
+- Rebase & merge is the only merge method.
+- **The agent never merges, approves or pushes to `develop` or `main` without Nico's explicit authorization and prior review.**
+- `git push --force-with-lease` only on your own branch; never force push anywhere else.
+
+**Commits**
+
+- Conventional Commits in English: `feat: add timezone label`.
+- Types: `feat`, `fix`, `test`, `docs`, `refactor` and `chore`.
+- Each commit does one thing and leaves the tests green, because merges use rebase & merge.
+
+## Tests
+
+- Every `fix/*` starts with a failing test that reproduces the bug.
+- Minimum coverage: 80 % of lines, in the backend and in the frontend.
+- Tests never hit the network: stub HTTP with WebMock (backend) and mock the API client (frontend).
+- Never skip, disable or delete a test to get CI green.
+
+## Security
+
+- Validate every input (location, dates, range) before using it.
+- Never send internal error details (exception messages, stack traces) to clients.
+- No secrets, `.env` files or real personal data in the repo; version only `.env.example`.
+- Don't log personal data.
+- New dependencies must pass `bundle exec bundler-audit check --update` or `npm audit --audit-level=high`.
+
+## CHANGELOG
+
+Each PR adds its version section at the top of `CHANGELOG.md`:
+
+- `feat` bumps MINOR; every other type bumps PATCH.
+- MAJOR stays at 0 until `1.0.0` is released on `main`.
+- The versioning guide is at the end of `CHANGELOG.md`.
+
+## When each task is done
+
+1. Run tests, coverage, lint, typecheck and audits, and confirm everything is green.
+2. Add the CHANGELOG entry and update the ADR and docs the task touches.
+3. Push the branch and open the PR to `develop`; Nico reviews and merges.
+4. If a command or a convention changed, update this file in the same PR.
+
+## Ask first
+
+Don't do any of these without Nico's approval:
+
+- Changing the stack, a major version or an ADR decision.
+- Adding a paid service or a new external service.
+- Deploying the app anywhere.
