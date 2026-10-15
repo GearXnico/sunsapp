@@ -4,6 +4,18 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.9] - 2026-10-15
+
+### Fixed
+
+- `GET /api/sun_cycle` returns the sun times in 24-hour local time of the place, with its zone (API v2: `{ location, timezone, days: [{ date, sunrise, sunset, golden_hour, utc_offset }] }`). Before, it sent a parameter SunriseSunset.io does not have and got 12-hour times with no zone.
+- Each cached day stores its `timezone` and `utc_offset`; cached rows without a zone are deleted and fetched again.
+- Missing days are fetched in one call instead of one call per day.
+
+### Added
+
+- ADR 0006 (local time of the place).
+
 ## [0.1.8] - 2026-10-15
 
 ### Fixed

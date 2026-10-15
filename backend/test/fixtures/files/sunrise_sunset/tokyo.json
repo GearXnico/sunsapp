@@ -1,0 +1,19 @@
+{
+  "results": [
+    {
+      "date": "2026-06-21",
+      "sunrise": "4:25:41",
+      "sunset": "19:00:39",
+      "first_light": "2:47:03",
+      "last_light": "20:39:17",
+      "dawn": "3:55:12",
+      "dusk": "19:31:08",
+      "solar_noon": "11:43:10",
+      "golden_hour": "18:20:11",
+      "day_length": "14:34:58",
+      "timezone": "Asia/Tokyo",
+      "utc_offset": 540
+    }
+  ],
+  "status": "OK"
+}
