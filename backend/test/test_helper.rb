@@ -30,6 +30,18 @@ module ActiveSupport
       Geocoder::Lookup::Test.reset
     end
 
+    # The test env uses :null_store; cache tests call this to get a fresh MemoryStore per test.
+    def self.use_memory_cache
+      setup do
+        @original_cache = Rails.cache
+        Rails.cache = ActiveSupport::Cache::MemoryStore.new
+      end
+
+      teardown do
+        Rails.cache = @original_cache
+      end
+    end
+
     # Body of a SunriseSunset.io /json response saved in test/fixtures/files/sunrise_sunset/.
     def sunrise_sunset_fixture(name)
       file_fixture("sunrise_sunset/#{name}.json").read
