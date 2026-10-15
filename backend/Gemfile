@@ -55,6 +55,9 @@ group :test do
   # Blocks real HTTP and stubs external APIs [https://github.com/bblimke/webmock]
   gem "webmock"
 
+  # Minitest 6 moved mocks and stubs (Object#stub) to this gem [https://github.com/minitest/minitest-mock]
+  gem "minitest-mock"
+
   # Code coverage report [https://github.com/simplecov-ruby/simplecov]
   gem "simplecov", require: false
 end
