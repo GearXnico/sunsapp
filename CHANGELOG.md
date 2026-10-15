@@ -4,6 +4,18 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.13] - 2026-10-15
+
+### Changed
+
+- Sun times are cached in `Rails.cache` (Solid Cache in production), one entry per place and day for 30 days, instead of the `sun_cycle_data` table; repeated searches still call SunriseSunset.io only for the missing days.
+- Geocoding matches are cached for 30 days, as the Nominatim usage policy asks; misses and errors are not cached and the location text is not stored in the key.
+- The production cache keeps entries at most 30 days (256 MB cap), and development always uses a 64 MB memory cache. See ADR 0017.
+
+### Removed
+
+- The `SunCycleData` model. The `sun_cycle_data` table stays until a later release drops it.
+
 ## [0.1.12] - 2026-10-15
 
 ### Added
