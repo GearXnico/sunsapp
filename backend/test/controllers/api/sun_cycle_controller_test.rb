@@ -1,8 +1,8 @@
 require "test_helper"
 
 class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
-  START = Date.new(2026, 6, 20)
-  FINISH = Date.new(2026, 6, 22)
+  START = Date.new(2026, 9, 5)
+  FINISH = Date.new(2026, 9, 7)
 
   setup do
     Geocoder::Lookup::Test.add_stub("Santiago", [ { "coordinates" => [ -33.4489, -70.6693 ] } ])
@@ -52,34 +52,82 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Invalid location", json["error"]
   end
 
-  test "returns one record per day and caches each day" do
-    stubs = (START..FINISH).map { |date| stub_sunrise_sunset(date) }
+  test "returns local 24-hour times with the zone of the place across a DST change" do
+    stub = stub_sunrise_sunset(START, FINISH, body: sunrise_sunset_fixture("santiago_dst_start"))
 
     assert_difference -> { SunCycleData.count }, 3 do
       get_sun_cycle(location: "santiago", start_date: START.to_s, end_date: FINISH.to_s)
     end
 
     assert_response :success
-    assert_equal %w[2026-06-20 2026-06-21 2026-06-22], json.map { |day| day["start_date"] }
     assert_equal(
-      { "location" => "Santiago", "start_date" => "2026-06-20", "end_date" => "2026-06-20",
-        "sunrise" => "7:46:34 AM", "sunset" => "5:42:11 PM", "golden_hour" => "5:05:40 PM" },
-      json.first
+      {
+        "location" => "Santiago",
+        "timezone" => "America/Santiago",
+        "days" => [
+          { "date" => "2026-09-05", "sunrise" => "07:21", "sunset" => "18:51", "golden_hour" => "18:17", "utc_offset" => -240 },
+          { "date" => "2026-09-06", "sunrise" => "08:20", "sunset" => "19:51", "golden_hour" => "19:18", "utc_offset" => -180 },
+          { "date" => "2026-09-07", "sunrise" => "08:18", "sunset" => "19:52", "golden_hour" => "19:19", "utc_offset" => -180 }
+        ]
+      },
+      json
     )
-    stubs.each { |stub| assert_requested stub, times: 1 }
+    assert_requested stub, times: 1
+  end
+
+  test "returns Tokyo times in Asia/Tokyo" do
+    Geocoder::Lookup::Test.add_stub("Tokyo", [ { "coordinates" => [ 35.6762, 139.6503 ] } ])
+    stub_sunrise_sunset(Date.new(2026, 6, 21), body: sunrise_sunset_fixture("tokyo"))
+
+    get_sun_cycle(location: "Tokyo", start_date: "2026-06-21", end_date: "2026-06-21")
+
+    assert_response :success
+    assert_equal "Asia/Tokyo", json["timezone"]
+    assert_equal(
+      [ { "date" => "2026-06-21", "sunrise" => "04:25", "sunset" => "19:00", "golden_hour" => "18:20", "utc_offset" => 540 } ],
+      json["days"]
+    )
+  end
+
+  test "returns null times for a polar day" do
+    Geocoder::Lookup::Test.add_stub("Tromso", [ { "coordinates" => [ 69.6492, 18.9553 ] } ])
+    stub_sunrise_sunset(Date.new(2026, 6, 21), body: sunrise_sunset_fixture("tromso_polar"))
+
+    get_sun_cycle(location: "Tromso", start_date: "2026-06-21", end_date: "2026-06-21")
+
+    assert_response :success
+    assert_equal(
+      [ { "date" => "2026-06-21", "sunrise" => nil, "sunset" => nil, "golden_hour" => nil, "utc_offset" => 120 } ],
+      json["days"]
+    )
   end
 
   test "serves cached days without calling the API again" do
-    stubs = (START..FINISH).map { |date| stub_sunrise_sunset(date) }
+    stub = stub_sunrise_sunset(START, FINISH, body: sunrise_sunset_fixture("santiago_dst_start"))
     get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
+    first_body = json
 
     assert_no_difference -> { SunCycleData.count } do
       get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
     end
 
     assert_response :success
-    assert_equal 3, json.size
-    stubs.each { |stub| assert_requested stub, times: 1 }
+    assert_equal first_body, json
+    assert_requested stub, times: 1
+  end
+
+  test "fetches only the days missing from the cache, in one call" do
+    first_day = stub_sunrise_sunset(START, body: sunrise_sunset_body(START, sunrise: "7:21:47"))
+    get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: START.to_s)
+    rest = stub_sunrise_sunset(START + 1, FINISH, body: sunrise_sunset_fixture("santiago_dst_start"))
+
+    get_sun_cycle(location: "Santiago", start_date: START.to_s, end_date: FINISH.to_s)
+
+    assert_response :success
+    assert_equal %w[2026-09-05 2026-09-06 2026-09-07], json["days"].map { |day| day["date"] }
+    assert_equal 3, SunCycleData.count
+    assert_requested first_day, times: 1
+    assert_requested rest, times: 1
   end
 
   test "returns 404 when the API has no data for any day" do

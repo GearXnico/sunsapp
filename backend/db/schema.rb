@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_07_170651) do
+ActiveRecord::Schema[8.0].define(version: 2026_10_14_120000) do
   create_table "sun_cycle_data", force: :cascade do |t|
     t.string "location"
     t.date "start_date"
@@ -22,5 +22,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_07_170651) do
     t.float "long"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "timezone"
+    t.integer "utc_offset"
   end
 end
