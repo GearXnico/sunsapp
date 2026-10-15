@@ -15,11 +15,11 @@ The agent prepares the release; **Nico merges both PRs and creates the tag. The 
    ```
 3. Finalize `CHANGELOG.md`: merge the pending entries into one `## [x.y.z] - YYYY-MM-DD` section (Added, Changed, Fixed, Security), remove empty headings, and check the dates. Commit: `docs: finalize changelog for x.y.z`.
 4. Run the `check` and `security-pass` skills; both must be green.
-5. Push and open the PR to `main`:
+5. Push and open the PR to `main`, filling `.github/PULL_REQUEST_TEMPLATE/release.md` (what's new, every feature with its PR, fixes, under the hood):
    ```bash
    git push -u origin release/x.y.z
    gh pr create --base main --head release/x.y.z --reviewer GearXnico \
-     --title "chore: release x.y.z" --body-file <filled-template.md>
+     --title "chore: release x.y.z" --body-file <filled-release-template.md>
    ```
 6. After Nico merges it into `main`, open the back-merge PR so `develop` gets the release commits:
    ```bash
