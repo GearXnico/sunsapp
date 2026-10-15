@@ -4,6 +4,16 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [1.0.0] - 2026-10-15
+
+First stable release. It collects 0.1.4 to 0.1.14:
+
+- Sun times shown in the place's own time zone, with a fixed 24-hour chart axis (contract v2 of `GET /api/sun_cycle`).
+- Validated requests, generic errors and `Rails.cache` for sun times and geocoding.
+- React 19 + TypeScript + Vite frontend; Ruby 4.0.7 and Rails 8.1.4 backend.
+- Tests with an 80 % coverage gate, CI (continuous integration) for backend and frontend, and `docker compose up` for local development.
+- New README, API reference and ADRs 0001 to 0017.
+
 ## [0.1.14] - 2026-10-15
 
 ### Added
