@@ -1,14 +1,26 @@
 import ResultsChart from "./ResultsChart";
-import type { SunCycleDay } from "../api/types";
+import type { SunCycleResponse } from "../api/types";
+import { formatUtcOffset } from "../lib/time";
 
 interface ResultsProps {
-  data: SunCycleDay[];
+  data: SunCycleResponse;
 }
 
+const EMPTY = "—";
+
 function Results({ data }: ResultsProps) {
+  const { location, timezone, days } = data;
+  // A DST change inside the range gives days with different offsets: show it per row.
+  const offsets = new Set(days.map((day) => day.utc_offset));
+  const offsetPerRow = offsets.size > 1;
+  const zoneLabel = offsetPerRow
+    ? `Times in ${timezone}`
+    : `Times in ${timezone} (${formatUtcOffset(days[0]?.utc_offset ?? 0)})`;
+
   return (
     <div className="table-container">
-      <h1>{data[0]?.location}</h1>
+      <h1>{location}</h1>
+      <p>{zoneLabel}</p>
       <div className="chart-container mb-4">
         <ResultsChart data={data} />
       </div>
@@ -19,16 +31,18 @@ function Results({ data }: ResultsProps) {
               <th>Date</th>
               <th>Sunrise</th>
               <th>Sunset</th>
-              <th>Golden Hour</th>
+              <th>Golden hour (evening)</th>
+              {offsetPerRow && <th>UTC offset</th>}
             </tr>
           </thead>
           <tbody>
-            {data.map((day, index) => (
-              <tr key={index}>
-                <td>{day.start_date}</td>
-                <td>{day.sunrise}</td>
-                <td>{day.sunset}</td>
-                <td>{day.golden_hour}</td>
+            {days.map((day) => (
+              <tr key={day.date}>
+                <td>{day.date}</td>
+                <td>{day.sunrise ?? EMPTY}</td>
+                <td>{day.sunset ?? EMPTY}</td>
+                <td>{day.golden_hour ?? EMPTY}</td>
+                {offsetPerRow && <td>{formatUtcOffset(day.utc_offset)}</td>}
               </tr>
             ))}
           </tbody>
