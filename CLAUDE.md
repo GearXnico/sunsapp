@@ -1,6 +1,6 @@
 # CLAUDE.md · sunsapp
 
-sunsapp takes a location and a date range and returns, for each day, the sunrise, the sunset and the golden hour, shown as a table and a chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results in SQLite.
+sunsapp takes a location and a date range and returns, for each day, the sunrise, the sunset and the golden hour, shown as a table and a chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results with `Rails.cache`.
 
 Chat with Nico in Spanish or English; both are fine. In Spanish, keep in English the technical terms the industry uses in English. When you use an acronym, add its meaning in parentheses the first time.
 
@@ -16,21 +16,21 @@ Code, comments, documentation, commit messages, branch names and PR (pull reques
 | Document | Purpose |
 |---|---|
 | `docs/architecture.md` | Components, request flow and folder map |
-| `docs/api.md` | Contract of `GET /api/sun_cycle` (coming in T9) |
-| `docs/adr/` | The why behind each decision (ADR, architecture decision record) |
+| `docs/api.md` | Contract of `GET /api/sun_cycle` |
+| `docs/adr/` | The why behind each decision (ADR, architecture decision record); index in `docs/adr/README.md` |
 
 Don't change an ADR decision on your own. If the code doesn't match a document, ask first.
 
 ## Stack
 
-- **Backend:** Ruby 4.0.7, Rails 8.1 (API mode), SQLite, Minitest.
+- **Backend:** Ruby 4.0.7, Rails 8.1 (API mode), `Rails.cache` (Solid Cache on SQLite), Minitest.
 - **Frontend:** React 19, TypeScript in strict mode, Vite, Vitest, Chart.js.
 - **External APIs:** SunriseSunset.io (sun times) and Nominatim (geocoding).
 - **CI (continuous integration):** GitHub Actions in `.github/workflows/`.
 
-## Target structure
+## Structure
 
-The flow goes one way: component → API client → controller → core → external API. The model only stores (cache). The repo reaches this structure through tasks T3 to T7 of the plan.
+The flow goes one way: component → API client → controller → core → external API. The core caches with `Rails.cache`; there are no models.
 
 ```
 sunsapp/
@@ -39,16 +39,16 @@ sunsapp/
 ├── docs/                      architecture.md, api.md, adr/
 ├── backend/                   Rails 8 API
 │   ├── app/controllers/api/   receives and validates the request, builds the response
-│   ├── app/core/sun_cycle/    query.rb (validates), lookup.rb (cache + API),
+│   ├── app/core/sun_cycle/    query.rb (validates), lookup.rb (Rails.cache + API),
 │   │                          sunrise_sunset_client.rb, geocoding_client.rb
-│   ├── app/models/            SQLite cache
-│   └── test/                  mirrors app/ (controllers, core, models)
+│   └── test/                  mirrors app/ (controllers, core)
 ├── frontend/                  React + TypeScript (Vite)
 │   └── src/
 │       ├── api/               HTTP client and SunCycleDay type (only place that knows the URL)
-│       ├── lib/               pure functions: time parsing and formatting
+│       ├── lib/               pure functions: time parsing and formatting, chart data
 │       ├── components/        SearchForm, Results, ResultsChart, LoadingScreen, ErrorMessage
 │       └── App.tsx            builds the screen and holds the state
+├── compose.yml                local development (docker compose up)
 ├── CHANGELOG.md
 ├── CLAUDE.md
 └── README.md
@@ -56,7 +56,7 @@ sunsapp/
 
 ## Commands
 
-Target commands, introduced by T3 (backend) and T4 (frontend). Update this section if they change.
+Update this section if they change.
 
 ```bash
 # Everything locally (backend :3000, frontend :3001)
@@ -79,7 +79,7 @@ npm run dev                                    # Vite on :3001
 npm test                                       # Vitest
 npm run test:coverage                          # fails below 80 %
 npm run lint && npm run typecheck
-npm run build
+npm run build                                  # static site in dist/
 npm audit --audit-level=high
 ```
 
