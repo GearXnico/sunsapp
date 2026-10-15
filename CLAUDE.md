@@ -1,6 +1,6 @@
 # CLAUDE.md · sunsapp
 
-sunsapp takes a location and a date range and returns, for each day, the sunrise, the sunset and the golden hour, shown as a table and a chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results in SQLite.
+sunsapp takes a location and a date range and returns, for each day, the sunrise, the sunset and the golden hour, shown as a table and a chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results with `Rails.cache`.
 
 Chat with Nico in Spanish or English; both are fine. In Spanish, keep in English the technical terms the industry uses in English. When you use an acronym, add its meaning in parentheses the first time.
 
