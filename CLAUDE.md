@@ -99,6 +99,7 @@ CI runs `.github/workflows/backend.yml` and `.github/workflows/frontend.yml` on 
 **Pull requests and merges**
 
 - One PR per plan task, targeting `develop`, using the PR template (Before, After, How to test, Checklist).
+- Release PRs (`release/x.y.z` → `main`) use `.github/PULL_REQUEST_TEMPLATE/release.md`: what's new and every feature included.
 - Rebase & merge is the only merge method.
 - **The agent never merges, approves or pushes to `develop` or `main` without Nico's explicit authorization and prior review.**
 - `git push --force-with-lease` only on your own branch; never force push anywhere else.
