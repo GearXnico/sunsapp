@@ -4,6 +4,18 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [0.1.11] - 2026-10-15
+
+### Changed
+
+- Rails 8.0.5.1 → 8.1.4 (`load_defaults 8.1`), with the `app:update` changes reviewed by hand; the app keeps its own CORS, parameter filter and production settings.
+- Ruby 3.4.3 → 4.0.7 in `.ruby-version` and the backend Dockerfile.
+- json 3.1, minitest 6 (with `minitest-mock` for `Object#stub`) and native extension gems updated for Ruby 4.0.
+
+### Removed
+
+- The Brakeman ignore for the Rails 8.0 end of life (`config/brakeman.ignore`).
+
 ## [0.1.10] - 2026-10-15
 
 ### Fixed
