@@ -36,8 +36,8 @@ queries. Production already runs Solid Cache (`:solid_cache_store`, its own SQLi
 - Stores: production uses Solid Cache with `max_size` 256 MB and `max_age` 30 days
   (`config/cache.yml`); development uses a 64 MB memory store that is always on; tests use
   `:null_store` and the cache tests swap in a fresh `MemoryStore`.
-- The `SunCycleData` model is removed. The `sun_cycle_data` table stays until a later PR drops it
-  (two-PR rule for removals).
+- The `SunCycleData` model is removed. The `sun_cycle_data` table stayed until a later PR dropped it
+  (two-PR rule for removals); it was dropped after 1.0.0.
 
 ## Consequences
 
