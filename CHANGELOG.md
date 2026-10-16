@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Versions are decided at release time: PRs add their entries under `Unreleased`, and every version in this file is a tagged release on `main` (ADR 0002, amended).
 - `CLAUDE.md` writes down the two-PR rule for removing a table or column.
 
+### Removed
+
+- The unused `sun_cycle_data` table, dropped by a migration. The cache has lived in `Rails.cache` since 1.0.0 (ADR 0017).
+
 ## [1.0.0] - 2026-10-15
 
 First stable release. It collects 0.1.4 to 0.1.14:
