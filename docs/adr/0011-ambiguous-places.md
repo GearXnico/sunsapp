@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (2026-10-15)
+Accepted (2026-10-17)
 
 ## Context
 
@@ -14,9 +14,9 @@ Proposed (2026-10-15)
 2. **Let the user pick:** a new endpoint (or a mode of the current one) returns a few candidates, and the frontend shows a list before searching. Clearer, but adds an endpoint, a UI step and more geocoding calls.
 3. **Autocomplete while typing:** best experience, but many geocoding calls, which the Nominatim policy discourages (ADR 0010).
 
-## Decision (proposed)
+## Decision
 
-Option 1 first: add the matched place name to the response (contract v3, following the `api-contract` skill) and show it in the UI. Revisit option 2 if users still get the wrong place.
+Option 1 first: add the matched place name to the response as `matched_place` (contract v3, following the `api-contract` skill) and show it in the UI. Revisit option 2 if users still get the wrong place.
 
 ## Consequences
 
