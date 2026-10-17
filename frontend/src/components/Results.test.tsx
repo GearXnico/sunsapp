@@ -10,6 +10,7 @@ describe("Results", () => {
     render(<Results data={sunCycle} />);
 
     expect(screen.getByRole("heading", { name: "Santiago" })).toBeInTheDocument();
+    expect(screen.getByText("Showing Santiago, Región Metropolitana de Santiago, Chile")).toBeInTheDocument();
     expect(screen.getByText("Times in America/Santiago (UTC−4)")).toBeInTheDocument();
     expect(screen.getByTestId("results-chart")).toBeInTheDocument();
     expect(screen.getByRole("columnheader", { name: "Golden hour (evening)" })).toBeInTheDocument();
@@ -33,6 +34,7 @@ describe("Results", () => {
     render(<Results data={sunCyclePolarNight} />);
 
     expect(screen.getByText("Times in Europe/Oslo (UTC+1)")).toBeInTheDocument();
+    expect(screen.queryByText(/^Showing/)).not.toBeInTheDocument();
     expect(screen.getAllByRole("row")[1]).toHaveTextContent("2027-01-14———");
   });
 });
