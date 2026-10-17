@@ -1,4 +1,4 @@
-// GET /api/sun_cycle response (contract v2). Times are local to `timezone`, 24-hour "HH:MM",
+// GET /api/sun_cycle response (contract v3). Times are local to `timezone`, 24-hour "HH:MM",
 // and may be null (polar day or night). `utc_offset` is minutes from UTC for that day.
 export interface SunCycleDay {
   date: string;
@@ -11,6 +11,8 @@ export interface SunCycleDay {
 
 export interface SunCycleResponse {
   location: string;
+  // Place the geocoder matched, for example "Santiago, Región Metropolitana de Santiago, Chile"; null if it sent none
+  matched_place: string | null;
   // IANA time zone name, for example "America/Santiago"
   timezone: string;
   days: SunCycleDay[];
