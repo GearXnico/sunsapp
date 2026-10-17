@@ -16,6 +16,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- New interface from the approved R5 wireframe ([ADR 0016](docs/adr/0016-ui-renewal.md), now accepted): a centered start card, the search form in one row on top of the results, and light and dark themes that follow the system.
+- Search errors are plain-language messages inside the card (for example "We couldn't find that place."), the field at fault is marked with `aria-invalid`, and the API's raw text or internal details are never shown.
+- Loading shows a turning sun inside the card and a disabled "Searching…" button instead of the full-screen overlay.
+- The day view shows six key time cards (first light, sunrise, solar noon, golden hour, sunset, last light) instead of the stages list; "See variation" and "Export CSV" sit together above the table.
+- The footer credits SunriseSunset.io and Nominatim (© OpenStreetMap contributors).
+
 - Versions are decided at release time: PRs add their entries under `Unreleased`, and every version in this file is a tagged release on `main` (ADR 0002, amended).
 - `CLAUDE.md` writes down the two-PR rule for removing a table or column.
 - The line chart is behind a "See variation" button, and the table highlights the day shown in the day view.
@@ -25,6 +31,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Removed
 
+- Bootstrap: the frontend uses its own CSS with design tokens.
 - The unused `sun_cycle_data` table, dropped by a migration. The cache has lived in `Rails.cache` since 1.0.0 (ADR 0017).
 
 ## [1.0.0] - 2026-10-15
