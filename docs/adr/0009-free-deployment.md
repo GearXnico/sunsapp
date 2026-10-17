@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (2026-10-15)
+Accepted (2026-10-17)
 
 ## Context
 
@@ -25,9 +25,17 @@ Frontend (static hosting, usually free for public sites):
 1. **GitHub Pages:** same place as the repo, deploy from a GitHub Actions workflow; no server-side config.
 2. **Cloudflare Pages or Netlify:** free static hosting with preview deploys per PR; another account to manage.
 
-## Decision (proposed)
+## Checked on 2026-10-17 (official docs)
 
-Pick the backend host that keeps the SQLite file on a persistent disk at $0, if one does after checking the official docs; otherwise accept a cache that is lost on restart. Host the frontend on GitHub Pages, built by CI with `VITE_API_URL` pointing to the backend, and set `CORS_ORIGINS` to the Pages origin.
+- **Render** ([render.com/docs/free](https://render.com/docs/free)): free web services exist; they spin down after 15 minutes without traffic, take about a minute to wake up, cannot attach a persistent disk, and share 750 free instance hours per month.
+- **Fly.io** ([docs.fly.io/about/pricing](https://docs.fly.io/about/pricing)): new organizations have no free tier, only a short trial, and volumes are billed.
+- **Koyeb** ([koyeb.com/pricing](https://www.koyeb.com/pricing)): the pricing page lists no free web service.
+
+None keeps a persistent disk at $0.
+
+## Decision
+
+Nico chose Render on 2026-10-17. The API runs on Render's free plan from `render.yaml` (Docker, deploys `main`), and its cache is lost on restart. The frontend is on GitHub Pages, built by `.github/workflows/pages.yml` on push to `main` with `VITE_API_URL` from the `API_URL` repository variable. `CORS_ORIGINS` is the Pages origin, `https://gearxnico.github.io`.
 
 ## Consequences
 

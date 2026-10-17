@@ -12,7 +12,7 @@ Each ADR records one decision: its context, the options considered, the decision
 | [0006](0006-local-time-of-place.md) | Local time of the place | Accepted |
 | [0007](0007-sqlite-cache-and-range-limit.md) | SQLite cache and range limit | Accepted; cache part superseded by 0017 |
 | [0008](0008-chart-time-axis.md) | Chart.js with a fixed local-time axis | Accepted; chart behind a button since 0018 |
-| [0009](0009-free-deployment.md) | Free deployment | Proposed |
+| [0009](0009-free-deployment.md) | Free deployment | Accepted |
 | [0010](0010-geocoding-provider.md) | Geocoding provider | Proposed |
 | [0011](0011-ambiguous-places.md) | Choosing between ambiguous places | Accepted |
 | [0012](0012-rate-limiting.md) | Rate limiting per IP | Accepted |
