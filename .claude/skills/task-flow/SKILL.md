@@ -29,7 +29,7 @@ git-flow with rebase & merge as the only merge method (ADR 0002). One plan task 
 ## Finish
 
 1. Run the `check` skill until it is green, then the `security-pass` skill.
-2. Add the version entry at the top of `CHANGELOG.md`: a branch with any `feat` commit bumps MINOR, otherwise bump PATCH, from the latest version in the file. Commit it as `docs: add <version> to changelog`.
+2. Add your entries under `## [Unreleased]` at the top of `CHANGELOG.md` (Added, Changed, Removed, Fixed, Security). Do not pick a version number; the `release` skill does that. Commit it as `docs: add <change> to unreleased changelog`.
 3. Push your branch: `git push -u origin <type>/<short-name>`.
 4. Open the PR to `develop` with the body from `.github/pull_request_template.md` (Before, After, How to test, Checklist) and Nico as reviewer:
    ```bash
@@ -48,4 +48,4 @@ git rebase origin/develop          # fix conflicts, rerun the check skill
 git push --force-with-lease
 ```
 
-Use `--force-with-lease` only on your own branches, never on `develop`, `main` or someone else's branch. If the rebase changes a CHANGELOG version that is now taken, bump it.
+Use `--force-with-lease` only on your own branches, never on `develop`, `main` or someone else's branch. If the rebase conflicts in `CHANGELOG.md`, keep both sides' entries under `Unreleased`.

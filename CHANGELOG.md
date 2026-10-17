@@ -4,11 +4,15 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
-## [1.0.1] - 2026-10-15
+## [Unreleased]
 
 ### Added
 
 - Release pull request template (`.github/PULL_REQUEST_TEMPLATE/release.md`) with what's new and the list of features included.
+
+### Changed
+
+- Versions are decided at release time: PRs add their entries under `Unreleased`, and every version in this file is a tagged release on `main` (ADR 0002, amended).
 
 ## [1.0.0] - 2026-10-15
 
@@ -211,9 +215,11 @@ First release (`release/0.1.0`).
 
 ## Versioning guide
 
-- Each PR adds its own version section at the top of this file, in the PR itself.
-- `feat` commits bump MINOR (`0.1.4` → `0.2.0`); every other type (`fix`, `docs`, `refactor`, `chore`, `test`) bumps PATCH (`0.2.0` → `0.2.1`). A PR with at least one `feat` bumps MINOR.
-- MAJOR stays at 0 until `1.0.0` is released on `main` through `release/1.0.0`.
+Versions follow [Semantic Versioning](https://semver.org/spec/v2.0.0.html) and are decided once, at release time (ADR 0002, amended 2026-10-17).
+
+- Each PR adds its entries under `## [Unreleased]` at the top of this file, in the PR itself. It does not pick a version number.
 - Use the sections `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed` and `Security`; leave out the empty ones.
 - Write entries for people using or maintaining the app, not as a copy of the commit messages.
-- When a PR merges, open PRs rebase on `develop` and renumber their section if another PR took their version.
+- On `release/x.y.z`, the `Unreleased` section becomes `## [x.y.z] - YYYY-MM-DD`, from what it collected: a breaking change to the API contract bumps MAJOR, any new feature bumps MINOR, and only fixes or maintenance bump PATCH. That version gets the tag `vx.y.z` on `main`.
+- A `hotfix/*` PR to `main` adds its own PATCH section directly, because it ships on its own.
+- Every version in this file is a release on `main` with its tag. The `0.1.x` sections before `1.0.0` are the exception: they record the per-PR versions used while the app was first built.
