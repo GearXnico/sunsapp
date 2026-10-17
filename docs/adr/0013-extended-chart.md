@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (2026-10-15)
+Superseded by [0018](0018-day-sky-view.md) (2026-10-16). Proposed (2026-10-15).
 
 ## Context
 

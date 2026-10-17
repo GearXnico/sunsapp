@@ -2,7 +2,8 @@
 
 ## Status
 
-Accepted (2026-10-14)
+Accepted (2026-10-14). Since [ADR 0018](0018-day-sky-view.md) (2026-10-16) the chart is no longer
+the main visual: it shows the variation across the range behind a "See variation" button, unchanged.
 
 ## Context
 
@@ -41,4 +42,5 @@ the range (DST, daylight saving time), and "—" for missing times.
 - Times are compared on the same scale across searches; a DST change shows as a one-hour step,
   which is the real local time.
 - Unknown formats fail visibly (gaps), and unit tests cover parsing and the data mapping.
-- Bands and day length stay for ADR 0013; a new UI design stays for ADR 0016.
+- Bands and day length stay for ADR 0013 (superseded by 0018, the day sky view); a new UI design
+  stays for ADR 0016.
