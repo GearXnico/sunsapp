@@ -48,7 +48,7 @@ backend/
 frontend/src/
   api/                   client.ts and types.ts (only place that knows the URL)
   lib/                   pure functions: time.ts (parsing, formatting), chartData.ts, dayView.ts (stages, day length), csv.ts
-  components/            SearchForm, Results, DayView, SkyBand, StageList, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
+  components/            SearchForm, Results, DayView, SkyBand, KeyTimes, Icon, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
   App.tsx                builds the screen and holds the state
 compose.yml              local development: backend :3000, frontend :3001 (Vite dev server)
 ```

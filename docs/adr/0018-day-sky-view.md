@@ -34,7 +34,7 @@ Option 2.
   before v3 lack the new fields; with a new key they are never read and expire on their own within
   30 days (ADR 0017). The cost is one extra SunriseSunset.io call per place and range the first
   time it is asked again.
-- **Day view** (`DayView`, `SkyBand`, `StageList` in `frontend/src/components/`, pure computations
+- **Day view** (`DayView`, `SkyBand`, `KeyTimes` (replaced `StageList` in ADR 0016) in `frontend/src/components/`, pure computations
   in `frontend/src/lib/dayView.ts`): the stages are night → twilight (`first_light`–`dawn`) →
   blue hour (`dawn`–`sunrise`) → morning golden hour → daylight → evening golden hour
   (`golden_hour`–`sunset`) → blue hour (`sunset`–`dusk`) → twilight (`dusk`–`last_light`) → night.
