@@ -11,11 +11,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - The response has `matched_place`, the name of the place the geocoder found, and the results show it under the title, so a wrong "Santiago" is visible (contract v3, ADR 0011). Geocoding cache entries move to the `geocoding/v2/` key, so places cached before are geocoded once more.
 - Release pull request template (`.github/PULL_REQUEST_TEMPLATE/release.md`) with what's new and the list of features included.
 - "Export CSV" button under the results table: downloads `sunsapp-<timezone>-<start>-<end>.csv` with date, sunrise, sunset, golden_hour and utc_offset, built in the browser with no API change (ADR 0015, now accepted). Missing times are empty cells, cells follow RFC 4180 and text cells that start with `=`, `+`, `-` or `@` are escaped against formula injection.
+- Day sky view as the main visual: a 24-hour band of night, twilight, blue hour, golden hour and daylight with the sun's arc from sunrise to sunset peaking at solar noon, the list of stages with start and end times, day length and its change against the previous day, and Prev/Next between the days of the range ([ADR 0018](docs/adr/0018-day-sky-view.md)).
+- `GET /api/sun_cycle` contract v3: `first_light`, `dawn`, `solar_noon`, `dusk` and `last_light` per day (24-hour `HH:MM` local time, `null` when missing). No field was renamed or removed.
 
 ### Changed
 
 - Versions are decided at release time: PRs add their entries under `Unreleased`, and every version in this file is a tagged release on `main` (ADR 0002, amended).
 - `CLAUDE.md` writes down the two-PR rule for removing a table or column.
+- The line chart is behind a "See variation" button, and the table highlights the day shown in the day view.
+- Sun times are cached under `sun_cycle/v2/`; entries written before contract v3 lack the new fields, are not read and expire on their own.
+- The morning golden hour end is approximated as the evening golden hour start mirrored around solar noon.
+- ADR 0013 (extended chart) is superseded by ADR 0018.
 
 ### Removed
 
