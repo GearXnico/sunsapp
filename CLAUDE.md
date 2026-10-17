@@ -1,6 +1,6 @@
 # CLAUDE.md · sunsapp
 
-sunsapp takes a location and a date range and returns, for each day, the sunrise, the sunset and the golden hour, shown as a table and a chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results with `Rails.cache`.
+sunsapp takes a location and a date range and returns, for each day, the twilight, sunrise, solar noon, golden hour and sunset times, shown as a 24-hour sky view of one day, a table and a line chart. The backend geocodes the location with Nominatim, asks SunriseSunset.io for the sun times and caches the results with `Rails.cache`.
 
 Chat with Nico in Spanish or English; both are fine. In Spanish, keep in English the technical terms the industry uses in English. When you use an acronym, add its meaning in parentheses the first time.
 
@@ -45,8 +45,9 @@ sunsapp/
 ├── frontend/                  React + TypeScript (Vite)
 │   └── src/
 │       ├── api/               HTTP client and SunCycleDay type (only place that knows the URL)
-│       ├── lib/               pure functions: time parsing and formatting, chart data, CSV export
-│       ├── components/        SearchForm, Results, ResultsChart, ExportCsvButton, LoadingScreen, ErrorMessage
+│       ├── lib/               pure functions: time parsing and formatting, chart data, day stages, CSV export
+│       ├── components/        SearchForm, Results, DayView, SkyBand, StageList, ResultsChart,
+│       │                      ExportCsvButton, LoadingScreen, ErrorMessage
 │       └── App.tsx            builds the screen and holds the state
 ├── compose.yml                local development (docker compose up)
 ├── CHANGELOG.md

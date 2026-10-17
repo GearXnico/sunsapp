@@ -129,3 +129,18 @@ label {
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
+
+/* Results: "See variation" toggle row and the day selected in the day view (ADR 0018). */
+.results-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.table-color {
+  --bs-table-active-bg: rgba(217, 130, 43, 0.45) !important;
+  --bs-table-active-color: #ffffff !important;
+}

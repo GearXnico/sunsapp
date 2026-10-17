@@ -1,3 +1,5 @@
+import { useState } from "react";
+import DayView from "./DayView";
 import ResultsChart from "./ResultsChart";
 import ExportCsvButton from "./ExportCsvButton";
 import type { SunCycleResponse } from "../api/types";
@@ -8,9 +10,14 @@ interface ResultsProps {
 }
 
 const EMPTY = "—";
+const CHART_ID = "results-variation";
 
 function Results({ data }: ResultsProps) {
-  const { location, matched_place: matchedPlace, timezone, days } = data;
+  const { timezone, days } = data;
+  // The selected day goes back to the first one when a new search brings new data.
+  const [selection, setSelection] = useState({ data, index: 0 });
+  const selected = selection.data === data ? selection.index : 0;
+  const [showChart, setShowChart] = useState(false);
   // A DST change inside the range gives days with different offsets: show it per row.
   const offsets = new Set(days.map((day) => day.utc_offset));
   const offsetPerRow = offsets.size > 1;
@@ -20,11 +27,21 @@ function Results({ data }: ResultsProps) {
 
   return (
     <div className="table-container">
-      <h1>{location}</h1>
-      {matchedPlace && <p className="matched-place">Showing {matchedPlace}</p>}
-      <p>{zoneLabel}</p>
-      <div className="chart-container mb-4">
-        <ResultsChart data={data} />
+      <DayView data={data} selected={selected} onSelect={(index) => setSelection({ data, index })} />
+      <div className="results-row">
+        <p className="mb-0">{zoneLabel}</p>
+        <button
+          type="button"
+          className="btn btn-light btn-sm"
+          aria-expanded={showChart}
+          aria-controls={CHART_ID}
+          onClick={() => setShowChart((shown) => !shown)}
+        >
+          {showChart ? "Hide variation" : "See variation"}
+        </button>
+      </div>
+      <div id={CHART_ID} className="chart-container mb-4" hidden={!showChart}>
+        {showChart && <ResultsChart data={data} />}
       </div>
       <div className="table-responsive">
         <table className="table table-striped table-color">
@@ -38,8 +55,12 @@ function Results({ data }: ResultsProps) {
             </tr>
           </thead>
           <tbody>
-            {days.map((day) => (
-              <tr key={day.date}>
+            {days.map((day, index) => (
+              <tr
+                key={day.date}
+                className={index === selected ? "table-active" : undefined}
+                aria-current={index === selected ? "true" : undefined}
+              >
                 <td>{day.date}</td>
                 <td>{day.sunrise ?? EMPTY}</td>
                 <td>{day.sunset ?? EMPTY}</td>

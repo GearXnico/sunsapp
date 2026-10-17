@@ -23,6 +23,8 @@ describe("App", () => {
     expect(await screen.findByRole("table")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Santiago" })).toBeInTheDocument();
     expect(screen.getAllByRole("row")).toHaveLength(3);
+    expect(screen.getByRole("img", { name: /^Sky on 2026-06-21/ })).toBeInTheDocument();
+    await user.click(screen.getByRole("button", { name: "See variation" }));
     expect(screen.getByTestId("line-chart")).toBeInTheDocument();
   });
 });

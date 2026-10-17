@@ -1,16 +1,16 @@
 # Architecture
 
-sunsapp takes a location and a date range and shows, for each day, the sunrise, the sunset and the evening golden hour in a table and a chart, in the local time of the place. The API contract is in [api.md](api.md).
+sunsapp takes a location and a date range and shows, for each day, its twilight, sunrise, solar noon, golden hour and sunset in the local time of the place: one day at a time as a 24-hour sky band, every day in a table, and the variation across the range in a line chart behind a button ([ADR 0018](adr/0018-day-sky-view.md)). The API contract is in [api.md](api.md).
 
 ## Components
 
 | Component | Role |
 |---|---|
-| Frontend (React + TypeScript, Vite) | Search form, results table and chart. Calls the backend through one API client. |
+| Frontend (React + TypeScript, Vite) | Search form, day sky view, results table and line chart. Calls the backend through one API client. |
 | Backend (Rails 8.1 API) | `GET /api/sun_cycle`: validates the request, geocodes the location, gets the sun times and caches them. |
 | `Rails.cache` | Solid Cache in production, the memory store in development. Holds one entry per place and day (coordinates rounded to 4 decimals + date) and the successful geocoding results (coordinates and matched name), both for 30 days. |
 | Nominatim | Turns a location name into coordinates and the name of the matched place. |
-| SunriseSunset.io | Returns sunrise, sunset and golden hour for coordinates and dates. |
+| SunriseSunset.io | Returns first light, dawn, sunrise, solar noon, golden hour, sunset, dusk and last light for coordinates and dates. |
 
 There is no table of sun times: everything the app stores is cache and can be lost without harm.
 
@@ -47,8 +47,8 @@ backend/
   test/                  mirrors app/ (controllers, core); WebMock blocks the network
 frontend/src/
   api/                   client.ts and types.ts (only place that knows the URL)
-  lib/                   pure functions: time.ts (parsing, formatting), chartData.ts, csv.ts
-  components/            SearchForm, Results, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
+  lib/                   pure functions: time.ts (parsing, formatting), chartData.ts, dayView.ts (stages, day length), csv.ts
+  components/            SearchForm, Results, DayView, SkyBand, StageList, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
   App.tsx                builds the screen and holds the state
 compose.yml              local development: backend :3000, frontend :3001 (Vite dev server)
 ```
