@@ -1,4 +1,5 @@
 import ResultsChart from "./ResultsChart";
+import ExportCsvButton from "./ExportCsvButton";
 import type { SunCycleResponse } from "../api/types";
 import { formatUtcOffset } from "../lib/time";
 
@@ -49,6 +50,7 @@ function Results({ data }: ResultsProps) {
           </tbody>
         </table>
       </div>
+      <ExportCsvButton data={data} />
     </div>
   );
 }
