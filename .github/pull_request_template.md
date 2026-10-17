@@ -18,6 +18,6 @@
 - [ ] Coverage ≥ 80 % (backend and frontend)
 - [ ] Lint and typecheck green (`bin/rubocop`, `npm run lint`, `npm run typecheck`)
 - [ ] Audits green (`bin/brakeman --no-pager`, `bundle exec bundler-audit check --update`, `npm audit --audit-level=high`)
-- [ ] `CHANGELOG.md` has this PR's version section at the top
+- [ ] `CHANGELOG.md` has this PR's entries under `Unreleased`
 - [ ] ADR and docs updated if a decision, command or convention changed
 - [ ] No secrets, `.env` files or personal data in the diff or the logs

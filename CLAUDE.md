@@ -127,16 +127,16 @@ CI runs `.github/workflows/backend.yml` and `.github/workflows/frontend.yml` on 
 
 ## CHANGELOG
 
-Each PR adds its version section at the top of `CHANGELOG.md`:
+Each PR adds its entries under `## [Unreleased]` at the top of `CHANGELOG.md`, without a version number:
 
-- `feat` bumps MINOR; every other type bumps PATCH.
-- MAJOR stays at 0 until `1.0.0` is released on `main`.
+- The version is decided once, on `release/x.y.z`, with SemVer: a breaking contract change bumps MAJOR, any new feature bumps MINOR, only fixes bump PATCH.
+- Every version in the CHANGELOG is a release on `main` with its tag; a `hotfix/*` adds its own PATCH section.
 - The versioning guide is at the end of `CHANGELOG.md`.
 
 ## When each task is done
 
 1. Run tests, coverage, lint, typecheck and audits, and confirm everything is green.
-2. Add the CHANGELOG entry and update the ADR and docs the task touches.
+2. Add the entries under `Unreleased` in the CHANGELOG and update the ADR and docs the task touches.
 3. Push the branch and open the PR to `develop`; Nico reviews and merges.
 4. If a command or a convention changed, update this file in the same PR.
 

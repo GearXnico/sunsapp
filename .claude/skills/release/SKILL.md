@@ -7,13 +7,13 @@ description: Use when closing a version: prepares release/x.y.z from develop, th
 
 The agent prepares the release; **Nico merges both PRs and creates the tag. The agent never merges, approves, tags or pushes to `main` or `develop`.**
 
-1. Pick the version `x.y.z`: the newest unreleased version at the top of `CHANGELOG.md`, or the one Nico gave (for example `1.0.0`).
+1. Pick the version `x.y.z` from the `## [Unreleased]` section of `CHANGELOG.md` and the latest released version, with SemVer: a breaking change to the API contract bumps MAJOR, any `Added` feature bumps MINOR, otherwise PATCH. If Nico gave a version, use his.
 2. Branch from an up-to-date `develop`:
    ```bash
    git fetch origin
    git switch -c release/x.y.z origin/develop
    ```
-3. Finalize `CHANGELOG.md`: merge the pending entries into one `## [x.y.z] - YYYY-MM-DD` section (Added, Changed, Fixed, Security), remove empty headings, and check the dates. Commit: `docs: finalize changelog for x.y.z`.
+3. Finalize `CHANGELOG.md`: rename `## [Unreleased]` to `## [x.y.z] - YYYY-MM-DD`, group its entries (Added, Changed, Removed, Fixed, Security), remove empty headings, and leave no `Unreleased` section behind. Commit: `docs: finalize changelog for x.y.z`.
 4. Run the `check` and `security-pass` skills; both must be green.
 5. Push and open the PR to `main`, filling `.github/PULL_REQUEST_TEMPLATE/release.md` (what's new, every feature with its PR, fixes, under the hood):
    ```bash
