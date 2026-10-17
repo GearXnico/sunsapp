@@ -7,6 +7,7 @@ Type a place and a date range, and see the sunrise, sunset and evening golden ho
 - Any place name: the backend geocodes it with [Nominatim](https://nominatim.org/) (OpenStreetMap).
 - Sun times from [SunriseSunset.io](https://sunrisesunset.io/api/), in 24-hour local time with the zone shown (for example `America/Santiago (UTC−3)`), DST (daylight saving time) changes included.
 - A table and a Chart.js chart on a fixed 00:00–24:00 axis; polar days and nights show as "—" and gaps.
+- Export CSV: download the results as a CSV file, built in the browser.
 - Ranges of up to 366 days. Sun times and geocoding results are cached for 30 days with `Rails.cache`, so repeated searches don't call the external APIs again.
 - Input validation with clear 400 messages, and 500 errors that never leak internal details.
 
@@ -48,9 +49,9 @@ sunsapp/
 │   └── test/                     mirrors app/; WebMock blocks the network
 ├── frontend/                     React 19 + TypeScript strict (Vite)
 │   └── src/
-│       ├── components/           SearchForm, Results, ResultsChart, ErrorMessage, LoadingScreen
+│       ├── components/           SearchForm, Results, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
 │       ├── api/                  client.ts and types.ts: the only place that knows the API URL
-│       ├── lib/                  pure functions: time parsing and chart data
+│       ├── lib/                  pure functions: time parsing, chart data and CSV
 │       └── App.tsx               the screen and its state
 ├── docs/                         api.md, architecture.md, adr/
 ├── .github/workflows/            backend.yml and frontend.yml (CI)
