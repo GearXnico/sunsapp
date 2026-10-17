@@ -17,6 +17,7 @@ describe("Results", () => {
     const rows = screen.getAllByRole("row");
     expect(rows).toHaveLength(3); // header + 2 days
     expect(rows[1]).toHaveTextContent("2026-06-2107:4617:4217:05");
+    expect(screen.getByRole("button", { name: "Export CSV" })).toBeInTheDocument();
   });
 
   it("shows the offset per row when it changes inside the range (DST)", () => {
