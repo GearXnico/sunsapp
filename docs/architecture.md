@@ -47,8 +47,8 @@ backend/
   test/                  mirrors app/ (controllers, core); WebMock blocks the network
 frontend/src/
   api/                   client.ts and types.ts (only place that knows the URL)
-  lib/                   pure functions: time.ts (parsing, formatting), chartData.ts
-  components/            SearchForm, Results, ResultsChart, ErrorMessage, LoadingScreen
+  lib/                   pure functions: time.ts (parsing, formatting), chartData.ts, csv.ts
+  components/            SearchForm, Results, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
   App.tsx                builds the screen and holds the state
 compose.yml              local development: backend :3000, frontend :3001 (Vite dev server)
 ```

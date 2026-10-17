@@ -15,11 +15,12 @@ It expects the backend on `http://localhost:3000`; to use another one, set `VITE
 
 ```
 src/App.tsx                  the screen and its state (results, loading)
-src/components/              SearchForm, Results, ResultsChart, ErrorMessage, LoadingScreen
+src/components/              SearchForm, Results, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
 src/api/client.ts            fetchSunCycle(): the only place that knows the API URL
 src/api/types.ts             SunCycleResponse and SunCycleDay (contract v2, docs/api.md)
 src/lib/time.ts              parse and format "HH:MM" times and UTC offsets
 src/lib/chartData.ts         API days -> Chart.js datasets (null times become gaps)
+src/lib/csv.ts               results -> CSV text and file name (RFC 4180, formula escaping)
 src/test/                    Vitest setup and shared fixtures
 ```
 
