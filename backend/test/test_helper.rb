@@ -24,13 +24,15 @@ module ActiveSupport
 
     setup do
       Geocoder::Lookup::Test.set_default_stub([])
+      # The rate limiter keeps its counters in the boot-time cache store, so each test starts empty.
+      Rails.cache.clear
     end
 
     teardown do
       Geocoder::Lookup::Test.reset
     end
 
-    # The test env uses :null_store; cache tests call this to get a fresh MemoryStore per test.
+    # Cache tests call this to get a fresh MemoryStore per test.
     def self.use_memory_cache
       setup do
         @original_cache = Rails.cache

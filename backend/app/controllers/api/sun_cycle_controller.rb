@@ -1,4 +1,7 @@
 class Api::SunCycleController < ApplicationController
+  rate_limit to: 20, within: 1.minute, only: :index,
+             with: -> { render json: { error: "Too many requests" }, status: :too_many_requests }
+
   def index
     query = SunCycle::Query.new(params)
     return render json: { error: query.error }, status: :bad_request unless query.valid?
