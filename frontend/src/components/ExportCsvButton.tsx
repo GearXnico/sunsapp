@@ -20,7 +20,7 @@ function ExportCsvButton({ data }: ExportCsvButtonProps) {
   };
 
   return (
-    <button type="button" className="btn btn-primary" onClick={download}>
+    <button type="button" onClick={download}>
       Export CSV
     </button>
   );
