@@ -91,6 +91,7 @@ Every error body is `{ "error": "<message>" }`.
 | 400 | `<date> exceeds the allowed future limit (10 years from today).` | A date is more than 10 years ahead; `<date>` is the first one that is. |
 | 400 | `Date range cannot exceed 366 days` | The range is longer than 366 days. |
 | 404 | `No sun data found for this location and dates` | No day is cached and SunriseSunset.io fails or returns no usable data. |
+| 429 | `Too many requests` | The same IP sent more than 20 requests in the last minute. Wait and try again. |
 | 500 | `Internal server error` | Any unexpected error, including a geocoder outage or timeout. |
 
 The parameter checks run in the order of the table and the first failure is returned. The
