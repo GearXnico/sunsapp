@@ -4,7 +4,7 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
-## [Unreleased]
+## [1.1.0] - 2026-10-17
 
 ### Added
 
@@ -21,7 +21,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Loading shows a turning sun inside the card and a disabled "Searching…" button instead of the full-screen overlay.
 - The day view shows six key time cards (first light, sunrise, solar noon, golden hour, sunset, last light) instead of the stages list; "See variation" and "Export CSV" sit together above the table.
 - The footer credits SunriseSunset.io and Nominatim (© OpenStreetMap contributors).
-
 - Versions are decided at release time: PRs add their entries under `Unreleased`, and every version in this file is a tagged release on `main` (ADR 0002, amended).
 - `CLAUDE.md` writes down the two-PR rule for removing a table or column.
 - The line chart is behind a "See variation" button, and the table highlights the day shown in the day view.
