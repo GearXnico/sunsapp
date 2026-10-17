@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - Versions are decided at release time: PRs add their entries under `Unreleased`, and every version in this file is a tagged release on `main` (ADR 0002, amended).
+- `CLAUDE.md` writes down the two-PR rule for removing a table or column.
 
 ## [1.0.0] - 2026-10-15
 
