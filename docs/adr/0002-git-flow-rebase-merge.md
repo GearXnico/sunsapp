@@ -19,12 +19,12 @@ The history already follows git-flow: `develop`, `feature/front_branch`, `releas
 - **Rebase & merge** is the only merge method. Each commit follows Conventional Commits, does one thing and leaves the tests green.
 - One PR per plan task, targeting `develop`, with the PR template.
 - **The agent never merges, approves or pushes to `develop` or `main` without Nico's explicit authorization and prior review.** It may use `git push --force-with-lease` only on its own branch.
-- Versions follow SemVer (semantic versioning) in `CHANGELOG.md`: `feat` bumps MINOR, the rest bumps PATCH, MAJOR stays 0 until `1.0.0`.
+- Versions follow SemVer (semantic versioning) in `CHANGELOG.md`. *Amended 2026-10-17 (Nico):* PRs add their entries under `## [Unreleased]` and the version is decided once on `release/x.y.z` (breaking contract change → MAJOR, new feature → MINOR, otherwise PATCH), so every version is a tagged release on `main`. Before 1.0.0 each PR bumped its own version (`feat` → MINOR, the rest → PATCH).
 
 ## Consequences
 
 - The history stays linear and each commit can be reverted or bisected on its own.
 - Commits must be ordered and green before review, since they land as they are.
-- When a PR merges, open PRs rebase on `develop` and may need to renumber their CHANGELOG version.
+- When a PR merges, open PRs rebase on `develop`; CHANGELOG conflicts only merge entries under `Unreleased`, with no renumbering.
 - Nico is the only one who merges, so his review is the bottleneck and the safety net.
 - The old merge commits stay in the history; the new rule applies from this PR on.
