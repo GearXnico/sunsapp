@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - The response has `matched_place`, the name of the place the geocoder found, and the results show it under the title, so a wrong "Santiago" is visible (contract v3, ADR 0011). Geocoding cache entries move to the `geocoding/v2/` key, so places cached before are geocoded once more.
 - Release pull request template (`.github/PULL_REQUEST_TEMPLATE/release.md`) with what's new and the list of features included.
+- "Export CSV" button under the results table: downloads `sunsapp-<timezone>-<start>-<end>.csv` with date, sunrise, sunset, golden_hour and utc_offset, built in the browser with no API change (ADR 0015, now accepted). Missing times are empty cells, cells follow RFC 4180 and text cells that start with `=`, `+`, `-` or `@` are escaped against formula injection.
 
 ### Changed
 
