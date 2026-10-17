@@ -2,6 +2,10 @@
 
 Type a place and a date range, and see the twilight, sunrise, solar noon, golden hour and sunset of every day, in the local time of that place.
 
+**Live demo:** https://gearxnico.github.io/sunsapp/ (the API sleeps when idle, so the first search can take about a minute)
+
+![sunsapp showing the day sky view and the table for Santiago](docs/screenshot.jpg)
+
 ## Features
 
 - Any place name: the backend geocodes it with [Nominatim](https://nominatim.org/) (OpenStreetMap).
