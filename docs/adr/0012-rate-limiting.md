@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (2026-10-15)
+Accepted (2026-10-17)
 
 ## Context
 
@@ -16,7 +16,7 @@ Proposed (2026-10-15)
 
 ## Decision (proposed)
 
-Use `rate_limit to: N, within: 1.minute` in the controller, with N chosen when the app is deployed, and a 429 body `{ "error": "Too many requests" }` documented in `docs/api.md`. Add a controller test.
+Use `rate_limit to: N, within: 1.minute` in the controller, with N = 20 requests per minute (chosen 2026-10-17, enough for a person searching and paging through days), and a 429 body `{ "error": "Too many requests" }` documented in `docs/api.md`. Add a controller test.
 
 ## Consequences
 
