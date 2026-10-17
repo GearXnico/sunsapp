@@ -19,6 +19,16 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     response.parsed_body
   end
 
+  test "returns 429 after 20 requests from the same IP within a minute" do
+    20.times { get_sun_cycle(location: "Santiago") }
+    assert_response :bad_request
+
+    get_sun_cycle(location: "Santiago")
+
+    assert_response :too_many_requests
+    assert_equal "Too many requests", json["error"]
+  end
+
   test "returns 400 when a parameter is missing" do
     get_sun_cycle(location: "Santiago", start_date: "2026-06-20")
 
