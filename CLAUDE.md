@@ -45,8 +45,8 @@ sunsapp/
 ├── frontend/                  React + TypeScript (Vite)
 │   └── src/
 │       ├── api/               HTTP client and SunCycleDay type (only place that knows the URL)
-│       ├── lib/               pure functions: time parsing and formatting, chart data
-│       ├── components/        SearchForm, Results, ResultsChart, LoadingScreen, ErrorMessage
+│       ├── lib/               pure functions: time parsing and formatting, chart data, CSV export
+│       ├── components/        SearchForm, Results, ResultsChart, ExportCsvButton, LoadingScreen, ErrorMessage
 │       └── App.tsx            builds the screen and holds the state
 ├── compose.yml                local development (docker compose up)
 ├── CHANGELOG.md

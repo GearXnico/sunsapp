@@ -18,7 +18,7 @@ Each ADR records one decision: its context, the options considered, the decision
 | [0012](0012-rate-limiting.md) | Rate limiting per IP | Proposed |
 | [0013](0013-extended-chart.md) | Extended chart: golden hour bands and day length | Proposed |
 | [0014](0014-bilingual-ui.md) | Bilingual interface (Spanish and English) | Proposed |
-| [0015](0015-csv-export.md) | Export results to CSV | Proposed |
+| [0015](0015-csv-export.md) | Export results to CSV | Accepted |
 | [0016](0016-ui-renewal.md) | User interface renewal | Proposed |
 | [0017](0017-rails-cache-for-sun-times-and-geocoding.md) | Rails.cache for sun times and geocoding | Accepted |
 
