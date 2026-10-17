@@ -7,7 +7,21 @@ const lines = (csv: string) => csv.split("\r\n");
 
 const withDay = (overrides: Partial<SunCycleResponse["days"][number]>): SunCycleResponse => ({
   ...sunCycle,
-  days: [{ date: "2026-06-21", sunrise: "07:46", sunset: "17:42", golden_hour: "17:05", utc_offset: -240, ...overrides }],
+  days: [
+    {
+      date: "2026-06-21",
+      first_light: null,
+      dawn: null,
+      sunrise: "07:46",
+      solar_noon: null,
+      golden_hour: "17:05",
+      sunset: "17:42",
+      dusk: null,
+      last_light: null,
+      utc_offset: -240,
+      ...overrides,
+    },
+  ],
 });
 
 describe("buildCsv", () => {

@@ -19,15 +19,16 @@ class SunCycle::LookupTest < ActiveSupport::TestCase
     assert_equal "America/Santiago", lookup[:timezone]
 
     assert_requested stub, times: 1
-    entry = Rails.cache.read("sun_cycle/v1/-33.4489/-70.6693/2026-09-06")
+    entry = Rails.cache.read("sun_cycle/v2/-33.4489/-70.6693/2026-09-06")
     assert_equal "America/Santiago", entry[:timezone]
     assert_equal(
-      { date: "2026-09-06", sunrise: "08:20", sunset: "19:51", golden_hour: "19:18", utc_offset: -180 },
+      { date: "2026-09-06", first_light: "06:55", dawn: "07:54", sunrise: "08:20", solar_noon: "14:06",
+        golden_hour: "19:18", sunset: "19:51", dusk: "20:17", last_light: "21:16", utc_offset: -180 },
       entry[:day]
     )
 
     travel 31.days do
-      assert_nil Rails.cache.read("sun_cycle/v1/-33.4489/-70.6693/2026-09-06")
+      assert_nil Rails.cache.read("sun_cycle/v2/-33.4489/-70.6693/2026-09-06")
     end
   end
 
@@ -77,7 +78,20 @@ class SunCycle::LookupTest < ActiveSupport::TestCase
     days = lookup(-33.4489, -70.6693, DST_START..DST_START)[:days]
 
     assert_equal %w[2026-09-05], days.map { |day| day[:date] }
-    assert_nil Rails.cache.read("sun_cycle/v1/-33.4489/-70.6693/2026-09-06")
+    assert_nil Rails.cache.read("sun_cycle/v2/-33.4489/-70.6693/2026-09-06")
+  end
+
+  test "does not serve v1 entries, which lack the twilight and solar noon times" do
+    Rails.cache.write("sun_cycle/v1/-33.4489/-70.6693/2026-09-05",
+                      { timezone: "America/Santiago",
+                        day: { date: "2026-09-05", sunrise: "07:21", sunset: "18:51", golden_hour: "18:17",
+                               utc_offset: -240 } })
+    stub = stub_sunrise_sunset(DST_START, body: sunrise_sunset_fixture("santiago_dst_start"))
+
+    day = lookup(-33.4489, -70.6693, DST_START..DST_START)[:days].first
+
+    assert_equal "13:06", day[:solar_noon]
+    assert_requested stub, times: 1
   end
 
   test "returns nil and caches nothing when the API has no data" do

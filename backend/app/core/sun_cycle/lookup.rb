@@ -26,8 +26,9 @@ module SunCycle
 
     private
 
+    # v2 (contract v3) added the twilight and solar noon times; v1 entries lack them and are never read.
     def key(date)
-      format("sun_cycle/v1/%.#{PRECISION}f/%.#{PRECISION}f/%s", @lat, @lng, date.iso8601)
+      format("sun_cycle/v2/%.#{PRECISION}f/%.#{PRECISION}f/%s", @lat, @lng, date.iso8601)
     end
 
     # Failures are not cached, so the next request asks the API again.
@@ -43,8 +44,7 @@ module SunCycle
     end
 
     def serialize(day)
-      { date: day[:date].iso8601, sunrise: day[:sunrise], sunset: day[:sunset],
-        golden_hour: day[:golden_hour], utc_offset: day[:utc_offset] }
+      { **day, date: day[:date].iso8601 }
     end
   end
 end
