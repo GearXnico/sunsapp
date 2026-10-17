@@ -1,11 +1,19 @@
+import Icon from "./Icon";
+import type { SearchError } from "../lib/errors";
+
 interface ErrorMessageProps {
-  message: string;
+  id: string;
+  error: SearchError;
 }
 
-function ErrorMessage({ message }: ErrorMessageProps) {
+function ErrorMessage({ id, error }: ErrorMessageProps) {
   return (
-    <div className="alert alert-danger mt-3 mb-0" role="alert">
-      {message}
+    <div id={id} className="alert" role="alert">
+      <Icon name="alert" />
+      <span>
+        <b>{error.title}</b>
+        {error.hint && ` ${error.hint}`}
+      </span>
     </div>
   );
 }

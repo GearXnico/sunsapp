@@ -1,113 +1,102 @@
 import { useState, type FormEvent } from "react";
-import axios from "axios";
 import { fetchSunCycle } from "../api/client";
 import ErrorMessage from "./ErrorMessage";
+import LoadingScreen from "./LoadingScreen";
 import type { SunCycleResponse } from "../api/types";
+import { searchError, type SearchError } from "../lib/errors";
 
 interface SearchFormProps {
   setResults: (results: SunCycleResponse | null) => void;
-  setLoading: (loading: boolean) => void;
+  // One row on top of the results instead of the centered start card.
+  compact?: boolean;
 }
 
-function SearchForm({ setResults, setLoading }: SearchFormProps) {
+const ERROR_ID = "search-error";
+
+function SearchForm({ setResults, compact = false }: SearchFormProps) {
   const [location, setLocation] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [errorMessage, setError] = useState<string | null>(null);
+  const [error, setError] = useState<SearchError | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const validate = (): SearchError | null => {
+    if (!location) return { title: "Please fill in all fields.", field: "location" };
+    if (!startDate || !endDate) return { title: "Please fill in all fields.", field: "dates" };
+    if (!location.trim()) return { title: "Please enter a location.", field: "location" };
+    if (startDate > endDate) return { title: "The start date must be before the end date.", field: "dates" };
+    if (startDate.length !== 10 || endDate.length !== 10) {
+      return { title: "One of the dates is not valid.", field: "dates" };
+    }
+    return null;
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
+    const invalid = validate();
+    setError(invalid);
+    if (invalid) return;
 
-    if (!location || !startDate || !endDate) {
-      setError("Please fill in all fields.");
-      return;
-    }
-    if (!location.trim()) {
-      setError("Please enter a location.");
-      return;
-    }
-    if (startDate > endDate) {
-      setError("Start date must be before end date.");
-      return;
-    }
-    if (startDate.length !== 10 || endDate.length !== 10) {
-      setError("Please enter a valid date.");
-      return;
-    }
-
+    setLoading(true);
     try {
-      setLoading(true);
-      const data = await fetchSunCycle({ location, start_date: startDate, end_date: endDate });
-      setResults(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-
-      if (axios.isAxiosError<{ error?: string }>(error) && error.response) {
-        // Error response from server
-        const { status, data } = error.response;
-        if (status === 400) {
-          setError(`Bad Request: ${data?.error}`);
-        } else if (status === 404) {
-          setError(`Not Found: ${data?.error}`);
-        } else if (status === 500) {
-          setError(`Server Error: ${data?.error}`);
-        } else {
-          setError(`Unexpected error: ${data?.error || "Something went wrong."}`);
-        }
-      } else if (axios.isAxiosError(error) && error.request) {
-        // No response received
-        setError("No response from server. Check your connection.");
-      } else {
-        // Something else went wrong
-        setError("Request error: " + (error instanceof Error ? error.message : String(error)));
-      }
-      setResults(null); // clear previous results if there's an error
+      setResults(await fetchSunCycle({ location, start_date: startDate, end_date: endDate }));
+    } catch (err) {
+      setError(searchError(err));
+      setResults(null);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="p-3">
-      <div className="mb-2">
-        <input
-          type="text"
-          className="form-control mb-2"
-          placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
-          required
-        />
-      </div>
+  const invalid = (field: SearchError["field"]) =>
+    error?.field === field ? { "aria-invalid": true, "aria-describedby": ERROR_ID } : {};
+  const alert = error && <ErrorMessage id={ERROR_ID} error={error} />;
 
-      <div className="row">
-        <div className="col-md-6 mb-2">
-          <label htmlFor="startDate">Start Date</label>
+  return (
+    <>
+      <form className={compact ? "search inline" : "search"} aria-label="Search" onSubmit={handleSubmit} noValidate>
+        <label className="loc">
+          Location
           <input
-            id="startDate"
-            type="date"
-            className="form-control mt-2 mb-2"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
+            type="text"
+            placeholder="City, region or country"
+            value={location}
+            onChange={(e) => setLocation(e.target.value)}
             required
+            {...invalid("location")}
           />
+        </label>
+        <div className="dates">
+          <label>
+            From
+            <input
+              type="date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              required
+              {...invalid("dates")}
+            />
+          </label>
+          <label>
+            To
+            <input
+              type="date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              required
+              {...invalid("dates")}
+            />
+          </label>
         </div>
-        <div className="col-md-6 mb-2">
-          <label htmlFor="endDate">End Date</label>
-          <input
-            id="endDate"
-            type="date"
-            className="form-control mt-2 mb-2"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            required
-          />
-        </div>
-      </div>
-      <button className="btn btn-primary w-100 mt-3">Search</button>
-      {errorMessage && <ErrorMessage message={errorMessage} />}
-    </form>
+        {!compact && <span className="hint">Up to 366 days.</span>}
+        {!compact && alert}
+        <button className="primary" type="submit" disabled={loading}>
+          {loading ? "Searching…" : "Search"}
+        </button>
+      </form>
+      {compact && alert}
+      {loading && <LoadingScreen place={location.trim()} />}
+    </>
   );
 }
 

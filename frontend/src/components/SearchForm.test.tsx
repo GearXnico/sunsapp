@@ -12,16 +12,15 @@ const fetchMock = vi.mocked(fetchSunCycle);
 
 function setup() {
   const setResults = vi.fn();
-  const setLoading = vi.fn();
-  const { container } = render(<SearchForm setResults={setResults} setLoading={setLoading} />);
-  return { setResults, setLoading, form: container.querySelector("form")! };
+  const { container } = render(<SearchForm setResults={setResults} />);
+  return { setResults, form: container.querySelector("form")! };
 }
 
 async function fill(location: string, start: string, end: string) {
   const user = userEvent.setup();
-  if (location) await user.type(screen.getByPlaceholderText("Location"), location);
-  if (start) await user.type(screen.getByLabelText("Start Date"), start);
-  if (end) await user.type(screen.getByLabelText("End Date"), end);
+  if (location) await user.type(screen.getByLabelText("Location"), location);
+  if (start) await user.type(screen.getByLabelText("From"), start);
+  if (end) await user.type(screen.getByLabelText("To"), end);
   await user.click(screen.getByRole("button", { name: "Search" }));
 }
 
@@ -74,13 +73,14 @@ describe("SearchForm", () => {
     form.noValidate = true;
     await fill("Santiago", "2026-06-22", "2026-06-21");
 
-    expect(screen.getByRole("alert")).toHaveTextContent("Start date must be before end date.");
+    expect(screen.getByRole("alert")).toHaveTextContent("The start date must be before the end date.");
+    expect(screen.getByLabelText("To")).toHaveAttribute("aria-invalid", "true");
     expect(fetchMock).not.toHaveBeenCalled();
   });
 
   it("calls the API and passes the results up", async () => {
     fetchMock.mockResolvedValue(sunCycle);
-    const { setResults, setLoading } = setup();
+    const { setResults } = setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
     expect(fetchMock).toHaveBeenCalledWith({
@@ -90,22 +90,53 @@ describe("SearchForm", () => {
     });
     expect(setResults).toHaveBeenCalledWith(sunCycle);
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(setLoading).toHaveBeenNthCalledWith(1, true);
-    expect(setLoading).toHaveBeenLastCalledWith(false);
   });
 
-  it.each([
-    [400, "Bad Request: Invalid date"],
-    [404, "Not Found: Invalid date"],
-    [500, "Server Error: Invalid date"],
-    [422, "Unexpected error: Invalid date"],
-  ])("shows the server error for status %i and clears results", async (status, message) => {
-    fetchMock.mockRejectedValue(axiosError(status, "Invalid date"));
-    const { setResults } = setup();
+  it("shows a turning sun and disables Search while the search runs", async () => {
+    let resolve: (data: typeof sunCycle) => void = () => {};
+    fetchMock.mockReturnValue(new Promise((r) => (resolve = r)));
+    setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
-    expect(screen.getByRole("alert")).toHaveTextContent(message);
+    expect(screen.getByRole("button", { name: "Searching…" })).toBeDisabled();
+    expect(screen.getByRole("status")).toHaveTextContent("Looking up the sun for Santiago…");
+
+    resolve(sunCycle);
+    expect(await screen.findByRole("button", { name: "Search" })).toBeEnabled();
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("explains a place the geocoder does not find and marks the location field", async () => {
+    fetchMock.mockRejectedValue(axiosError(400, "Invalid location"));
+    const { setResults } = setup();
+    await fill("Santiagoo", "2026-06-21", "2026-06-22");
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent(`We couldn't find that place. Try a more specific name, for example "Santiago, Chile".`);
+    expect(alert).not.toHaveTextContent("Bad Request");
+    expect(screen.getByLabelText("Location")).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("Location")).toHaveAccessibleDescription(/We couldn't find that place/);
+    expect(screen.getByLabelText("From")).not.toHaveAttribute("aria-invalid");
     expect(setResults).toHaveBeenCalledWith(null);
+  });
+
+  it("marks the dates when the server rejects the range", async () => {
+    fetchMock.mockRejectedValue(axiosError(400, "Date range cannot exceed 366 days"));
+    setup();
+    await fill("Santiago", "2025-01-01", "2026-06-22");
+
+    expect(screen.getByRole("alert")).toHaveTextContent("The range is too long.");
+    expect(screen.getByLabelText("From")).toHaveAttribute("aria-invalid", "true");
+    expect(screen.getByLabelText("To")).toHaveAttribute("aria-invalid", "true");
+  });
+
+  it("never shows the server's internal error text", async () => {
+    fetchMock.mockRejectedValue(axiosError(500, "Internal server error"));
+    setup();
+    await fill("Santiago", "2026-06-21", "2026-06-22");
+
+    expect(screen.getByRole("alert")).toHaveTextContent("Something went wrong on our side.");
+    expect(screen.getByRole("alert")).not.toHaveTextContent("Internal server error");
   });
 
   it("shows an error when the server does not respond", async () => {
@@ -113,15 +144,7 @@ describe("SearchForm", () => {
     setup();
     await fill("Santiago", "2026-06-21", "2026-06-22");
 
-    expect(screen.getByRole("alert")).toHaveTextContent("No response from server. Check your connection.");
-  });
-
-  it("shows other request errors", async () => {
-    fetchMock.mockRejectedValue(new Error("boom"));
-    setup();
-    await fill("Santiago", "2026-06-21", "2026-06-22");
-
-    expect(screen.getByRole("alert")).toHaveTextContent("Request error: boom");
+    expect(screen.getByRole("alert")).toHaveTextContent("We couldn't reach the server.");
   });
 
   it("clears the previous error on a new search", async () => {
@@ -132,6 +155,13 @@ describe("SearchForm", () => {
 
     await userEvent.setup().click(screen.getByRole("button", { name: "Search" }));
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+  });
+
+  it("shows one row without the hint on top of the results", () => {
+    const { container } = render(<SearchForm setResults={vi.fn()} compact />);
+
+    expect(container.querySelector("form")).toHaveClass("inline");
+    expect(screen.queryByText("Up to 366 days.")).not.toBeInTheDocument();
   });
 
   it("never uses window.alert", async () => {
