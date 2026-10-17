@@ -110,6 +110,11 @@ CI runs `.github/workflows/backend.yml` and `.github/workflows/frontend.yml` on 
 - Types: `feat`, `fix`, `test`, `docs`, `refactor` and `chore`.
 - Each commit does one thing and leaves the tests green, because merges use rebase & merge.
 
+## Migrations
+
+- Migrations only add: new tables, optional columns or indexes.
+- Removing a table or column takes two PRs: the first stops using it in the code, and a later one drops it with a migration. Each step can then be reverted on its own, and a running older version never loses a table it still reads.
+
 ## Tests
 
 - Every `fix/*` starts with a failing test that reproduces the bug.
