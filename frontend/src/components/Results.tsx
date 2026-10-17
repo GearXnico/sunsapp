@@ -13,7 +13,7 @@ const EMPTY = "—";
 const CHART_ID = "results-variation";
 
 function Results({ data }: ResultsProps) {
-  const { timezone, days } = data;
+  const { location, matched_place: matchedPlace, timezone, days } = data;
   // The selected day goes back to the first one when a new search brings new data.
   const [selection, setSelection] = useState({ data, index: 0 });
   const selected = selection.data === data ? selection.index : 0;
@@ -26,53 +26,59 @@ function Results({ data }: ResultsProps) {
     : `Times in ${timezone} (${formatUtcOffset(days[0]?.utc_offset ?? 0)})`;
 
   return (
-    <div className="table-container">
+    <>
+      <header>
+        <h1 className="place">{location}</h1>
+        {matchedPlace && <div className="meta">Showing {matchedPlace}</div>}
+        <div className="meta">{zoneLabel}</div>
+      </header>
+
       <DayView data={data} selected={selected} onSelect={(index) => setSelection({ data, index })} />
-      <div className="results-row">
-        <p className="mb-0">{zoneLabel}</p>
-        <button
-          type="button"
-          className="btn btn-light btn-sm"
-          aria-expanded={showChart}
-          aria-controls={CHART_ID}
-          onClick={() => setShowChart((shown) => !shown)}
-        >
-          {showChart ? "Hide variation" : "See variation"}
-        </button>
-      </div>
-      <div id={CHART_ID} className="chart-container mb-4" hidden={!showChart}>
-        {showChart && <ResultsChart data={data} />}
-      </div>
-      <div className="table-responsive">
-        <table className="table table-striped table-color">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Sunrise</th>
-              <th>Sunset</th>
-              <th>Golden hour (evening)</th>
-              {offsetPerRow && <th>UTC offset</th>}
-            </tr>
-          </thead>
-          <tbody>
-            {days.map((day, index) => (
-              <tr
-                key={day.date}
-                className={index === selected ? "table-active" : undefined}
-                aria-current={index === selected ? "true" : undefined}
-              >
-                <td>{day.date}</td>
-                <td>{day.sunrise ?? EMPTY}</td>
-                <td>{day.sunset ?? EMPTY}</td>
-                <td>{day.golden_hour ?? EMPTY}</td>
-                {offsetPerRow && <td>{formatUtcOffset(day.utc_offset)}</td>}
+
+      <section className="all-days" aria-labelledby="all-days">
+        <div className="row">
+          <h2 id="all-days">All days</h2>
+          <div className="actions">
+            <button
+              type="button"
+              aria-expanded={showChart}
+              aria-controls={CHART_ID}
+              onClick={() => setShowChart((shown) => !shown)}
+            >
+              {showChart ? "Hide variation" : "See variation"}
+            </button>
+            <ExportCsvButton data={data} />
+          </div>
+        </div>
+        <div className="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Sunrise</th>
+                <th>Sunset</th>
+                <th>Golden hour (evening)</th>
+                {offsetPerRow && <th>UTC offset</th>}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-      <ExportCsvButton data={data} />
-    </div>
+            </thead>
+            <tbody>
+              {days.map((day, index) => (
+                <tr key={day.date} aria-current={index === selected ? "true" : undefined}>
+                  <td>{day.date}</td>
+                  <td>{day.sunrise ?? EMPTY}</td>
+                  <td>{day.sunset ?? EMPTY}</td>
+                  <td>{day.golden_hour ?? EMPTY}</td>
+                  {offsetPerRow && <td>{formatUtcOffset(day.utc_offset)}</td>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div id={CHART_ID} className="chart-card" hidden={!showChart}>
+          {showChart && <ResultsChart data={data} />}
+        </div>
+      </section>
+    </>
   );
 }
 

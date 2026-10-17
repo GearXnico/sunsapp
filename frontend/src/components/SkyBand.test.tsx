@@ -12,7 +12,7 @@ describe("SkyBand", () => {
     expect(screen.getByRole("img")).toHaveAccessibleName(/^Sky on 2026-06-21: first light 06:47, dawn 07:19/);
   });
 
-  it("draws one block per stage and the sun's arc", () => {
+  it("draws one block per stage, the sun's arc with a soft fill and the sun at solar noon", () => {
     const { container } = render(<SkyBand day={santiago} />);
 
     expect(container.querySelectorAll("rect.sky-night")).toHaveLength(2);
@@ -20,20 +20,20 @@ describe("SkyBand", () => {
     expect(container.querySelectorAll("rect.sky-day")).toHaveLength(1);
     // sunrise 07:46 → x 298.9, solar noon 12:44 → x 464.4, sunset 17:42 → x 630
     expect(container.querySelector("path.sky-arc")?.getAttribute("d")).toMatch(
-      /^M 298\.8\d* 150 Q 464\.4\d* -10 630 150$/,
+      /^M 298\.8\d* 118 Q 464\.4\d* -30 630 118$/,
     );
-    expect(container.querySelector("circle.sky-sun")?.getAttribute("cy")).toBe("70");
+    const fill = container.querySelector("path.sky-arc-fill");
+    expect(fill?.getAttribute("d")).toMatch(/ Z$/);
+    expect(fill?.getAttribute("fill")).toBe(`url(#${container.querySelector("linearGradient")?.id})`);
+    expect(container.querySelector("g.sky-sun")?.getAttribute("transform")).toMatch(/^translate\(464\.4\d* 44\)$/);
   });
 
-  it("labels sunrise, solar noon, sunset and the golden and blue hour limits", () => {
+  it("labels the hours of the day", () => {
     render(<SkyBand day={santiago} />);
 
-    for (const time of ["07:46", "12:44", "17:42", "07:19", "08:23", "17:05", "18:09"]) {
+    for (const time of ["00:00", "12:00", "24:00"]) {
       expect(screen.getByText(time)).toBeInTheDocument();
     }
-    expect(screen.getByText("solar noon")).toBeInTheDocument();
-    expect(screen.getAllByText("golden")).toHaveLength(2);
-    expect(screen.getAllByText("blue")).toHaveLength(2);
   });
 
   it("draws no stages or arc when the sun does not rise", () => {
@@ -41,7 +41,7 @@ describe("SkyBand", () => {
 
     expect(container.querySelectorAll("rect.sky-night, rect.sky-blue, rect.sky-gold, rect.sky-day")).toHaveLength(0);
     expect(container.querySelector("path.sky-arc")).toBeNull();
-    expect(screen.getByText("12:10")).toBeInTheDocument();
-    expect(screen.queryByText("sunrise")).not.toBeInTheDocument();
+    expect(container.querySelector(".sky-sun")).toBeNull();
+    expect(screen.getByRole("img")).toHaveAccessibleName("Sky on 2027-01-14: solar noon 12:10");
   });
 });
