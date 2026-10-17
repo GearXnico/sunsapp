@@ -1,6 +1,7 @@
 # HTTP client for SunriseSunset.io: one call per range of up to 365 days, 24-hour local times.
 # Called by SunCycle::Lookup for the days missing from the cache. Returns
-# { timezone:, days: [{ date:, sunrise:, sunset:, golden_hour:, utc_offset: }] } or nil on any failure.
+# { timezone:, days: [{ date:, first_light:, dawn:, sunrise:, solar_noon:, golden_hour:, sunset:, dusk:,
+# last_light:, utc_offset: }] } or nil on any failure.
 module SunCycle
   class SunriseSunsetClient
     include HTTParty
@@ -12,6 +13,8 @@ module SunCycle
     MAX_DAYS_PER_CALL = 365
     # time_format=24 returns "H:MM:SS" or "HH:MM:SS"; seconds are optional to be safe.
     TIME = /\A(\d{1,2}):(\d{2})(?::\d{2})?\z/
+    # Local times kept from each result, in the order of the day.
+    TIME_FIELDS = %i[first_light dawn sunrise solar_noon golden_hour sunset dusk last_light].freeze
     NETWORK_ERRORS = [ HTTParty::Error, SocketError, Timeout::Error, SystemCallError, OpenSSL::SSL::SSLError,
                        JSON::ParserError ].freeze
 
@@ -56,13 +59,8 @@ module SunCycle
 
     def parse_day(result)
       date = Date.iso8601(result["date"].to_s)
-      {
-        date: date,
-        sunrise: normalize_time(result["sunrise"]),
-        sunset: normalize_time(result["sunset"]),
-        golden_hour: normalize_time(result["golden_hour"]),
-        utc_offset: result["utc_offset"].is_a?(Integer) ? result["utc_offset"] : nil
-      }
+      times = TIME_FIELDS.to_h { |field| [ field, normalize_time(result[field.to_s]) ] }
+      { date: date, **times, utc_offset: result["utc_offset"].is_a?(Integer) ? result["utc_offset"] : nil }
     rescue Date::Error
       nil
     end

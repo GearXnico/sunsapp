@@ -41,9 +41,14 @@ describe("buildChartData", () => {
   it("never produces NaN for unexpected formats", () => {
     const day: SunCycleDay = {
       date: "2026-06-21",
+      first_light: null,
+      dawn: null,
       sunrise: "7:46:00 AM",
-      sunset: "2026-06-21T17:42:00-04:00",
+      solar_noon: null,
       golden_hour: "17:05",
+      sunset: "2026-06-21T17:42:00-04:00",
+      dusk: null,
+      last_light: null,
       utc_offset: -240,
     };
 

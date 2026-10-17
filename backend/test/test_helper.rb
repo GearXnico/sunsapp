@@ -49,11 +49,12 @@ module ActiveSupport
 
     # Body of a one-day response with `time_format=24`, for edge cases the fixtures do not cover.
     def sunrise_sunset_body(date, sunrise: "7:46:34", sunset: "17:42:11", golden_hour: "17:05:40",
-                            timezone: "America/Santiago", utc_offset: -240)
+                            solar_noon: "12:44:22", timezone: "America/Santiago", utc_offset: -240)
       {
         results: [
-          { date: date.to_s, sunrise: sunrise, sunset: sunset, golden_hour: golden_hour,
-            solar_noon: "12:44:22", day_length: "9:55:37", timezone: timezone, utc_offset: utc_offset }
+          { date: date.to_s, first_light: "6:21:10", dawn: "7:18:52", sunrise: sunrise, solar_noon: solar_noon,
+            golden_hour: golden_hour, sunset: sunset, dusk: "18:09:53", last_light: "19:07:34",
+            day_length: "9:55:37", timezone: timezone, utc_offset: utc_offset }
         ],
         status: "OK"
       }.to_json
