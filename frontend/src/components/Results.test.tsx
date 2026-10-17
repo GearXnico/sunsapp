@@ -20,7 +20,17 @@ describe("Results", () => {
     const rows = screen.getAllByRole("row");
     expect(rows).toHaveLength(3); // header + 2 days
     expect(rows[1]).toHaveTextContent("2026-06-2107:4617:4217:05");
+    expect(screen.getByRole("heading", { name: "All days" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Export CSV" })).toBeInTheDocument();
+  });
+
+  it("opens the line chart below the table", async () => {
+    render(<Results data={sunCycle} />);
+    await userEvent.setup().click(screen.getByRole("button", { name: "See variation" }));
+
+    const table = screen.getByRole("table");
+    const chart = screen.getByTestId("results-chart");
+    expect(table.compareDocumentPosition(chart) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });
 
   it("shows and hides the line chart with the See variation button", async () => {
@@ -46,7 +56,7 @@ describe("Results", () => {
     expect(rows()[1]).toHaveAttribute("aria-current", "true");
     expect(rows()[2]).not.toHaveAttribute("aria-current");
 
-    await user.click(screen.getByRole("button", { name: "Next ›" }));
+    await user.click(screen.getByRole("button", { name: "Next day" }));
 
     expect(rows()[1]).not.toHaveAttribute("aria-current");
     expect(rows()[2]).toHaveAttribute("aria-current", "true");
@@ -56,7 +66,7 @@ describe("Results", () => {
   it("goes back to the first day when new results arrive", async () => {
     const user = userEvent.setup();
     const { rerender } = render(<Results data={sunCycle} />);
-    await user.click(screen.getByRole("button", { name: "Next ›" }));
+    await user.click(screen.getByRole("button", { name: "Next day" }));
 
     rerender(<Results data={sunCycleDstChange} />);
 

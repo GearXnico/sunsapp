@@ -1,8 +1,8 @@
+import Icon from "./Icon";
+import KeyTimes from "./KeyTimes";
 import SkyBand from "./SkyBand";
-import StageList from "./StageList";
 import type { SunCycleResponse } from "../api/types";
-import { dayLength, dayStages, formatDuration, formatLengthChange } from "../lib/dayView";
-import { formatUtcOffset } from "../lib/time";
+import { dayLength, formatDuration, formatLengthChange } from "../lib/dayView";
 import "./DayView.css";
 
 interface DayViewProps {
@@ -11,9 +11,9 @@ interface DayViewProps {
   onSelect: (index: number) => void;
 }
 
-// One day of the range: header, 24-hour sky band, stages and Prev/Next between days.
+// One day of the range: Prev/Next, day length, 24-hour sky band and the six key times.
 function DayView({ data, selected, onSelect }: DayViewProps) {
-  const { location, matched_place: matchedPlace, timezone, days } = data;
+  const { days } = data;
   const day = days[selected];
   if (!day) return null;
 
@@ -24,43 +24,46 @@ function DayView({ data, selected, onSelect }: DayViewProps) {
 
   return (
     <section className="day-view" aria-label="Day view">
-      <header className="day-header">
-        <div>
-          <h1>{location}</h1>
-          {matchedPlace && <div className="day-muted">Showing {matchedPlace}</div>}
-          <div className="day-muted">
-            {timezone} · {formatUtcOffset(day.utc_offset)} · {day.date}
-          </div>
+      <div className="day-top">
+        <div className="day-nav">
+          <button
+            type="button"
+            className="round"
+            aria-label="Previous day"
+            onClick={() => onSelect(selected - 1)}
+            disabled={selected === 0}
+          >
+            <Icon name="prev" />
+          </button>
+          <span className="day-date" aria-live="polite">
+            <Icon name="calendar" />
+            {day.date}
+          </span>
+          <button
+            type="button"
+            className="round"
+            aria-label="Next day"
+            onClick={() => onSelect(selected + 1)}
+            disabled={selected === days.length - 1}
+          >
+            <Icon name="next" />
+          </button>
         </div>
-        <div className="day-length">
-          Day length
-          <b>{length === null ? "—" : formatDuration(length)}</b>
-          {change && <span className="day-change">{change} vs. previous day</span>}
-        </div>
-      </header>
-
-      <div className="day-card">
-        <div className="day-row">
-          <div className="day-nav">
-            <button type="button" onClick={() => onSelect(selected - 1)} disabled={selected === 0}>
-              ‹ Prev
-            </button>
-            <span className="day-current" aria-live="polite">
-              {day.date}
+        <span className="pill">
+          <Icon name="clock" />
+          Day length <b>{length === null ? "—" : formatDuration(length)}</b>
+          {change && (
+            <span className="pill-change">
+              {change}
+              <span className="visually-hidden"> vs. previous day</span>
             </span>
-            <button type="button" onClick={() => onSelect(selected + 1)} disabled={selected === days.length - 1}>
-              Next ›
-            </button>
-          </div>
-          <span className="day-muted">Times in the place&apos;s local time</span>
-        </div>
-        <div className="day-scroll">
-          <SkyBand day={day} />
-        </div>
+          )}
+        </span>
       </div>
-
-      <h2>Stages</h2>
-      <StageList stages={dayStages(day)} />
+      <div className="day-scroll">
+        <SkyBand day={day} />
+      </div>
+      <KeyTimes day={day} />
     </section>
   );
 }

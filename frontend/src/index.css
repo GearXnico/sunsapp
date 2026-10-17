@@ -1,13 +1,78 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+/* Design tokens (ADR 0016): light by default, dark through prefers-color-scheme. */
+:root {
+  --bg: #f3f5f9;
+  --surface: #ffffff;
+  --fg: #1d2333;
+  --muted: #5d6578;
+  --line: #d9deea;
+  --accent: #d9822b;
+  --on-accent: #1b1408;
+  --sel: #dbe5f7;
+  --danger-bg: #fdecea;
+  --danger-fg: #8a2316;
+  --danger-line: #f3c2bb;
+  --night: #1b2140;
+  --blue: #3c5fa8;
+  --gold: #f0a24f;
+  --gold-light: #f6b25e;
+  --day: #a9d5f2;
+  --badge-fg: #2d6d99;
+  --font: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", sans-serif;
+  --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  color-scheme: light;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #11141f;
+    --surface: #191d2b;
+    --fg: #e7eaf3;
+    --muted: #9aa2b6;
+    --line: #2c3246;
+    --accent: #f0a24f;
+    --sel: #263a63;
+    --danger-bg: #3a1c1a;
+    --danger-fg: #f6b8ad;
+    --danger-line: #5c2b26;
+    --badge-fg: var(--day);
+
+    color-scheme: dark;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--fg);
+  background-color: #142d4c;
+  font-family: var(--font);
+  font-size: 15px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
