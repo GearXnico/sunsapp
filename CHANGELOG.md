@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - Release pull request template (`.github/PULL_REQUEST_TEMPLATE/release.md`) with what's new and the list of features included.
+- "Export CSV" button under the results table: downloads `sunsapp-<timezone>-<start>-<end>.csv` with date, sunrise, sunset, golden_hour and utc_offset, built in the browser with no API change (ADR 0015, now accepted). Missing times are empty cells, cells follow RFC 4180 and text cells that start with `=`, `+`, `-` or `@` are escaped against formula injection.
 
 ### Changed
 
