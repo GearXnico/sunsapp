@@ -1,0 +1,228 @@
+/* Day sky view (ADR 0018). Scoped to .day-view; the page shell, form and table stay as they are. */
+.day-view {
+  --day-surface: #ffffff;
+  --day-bg: #f3f5f9;
+  --day-fg: #1d2333;
+  --day-muted: #5d6578;
+  --day-line: #d9deea;
+  --day-accent: #d9822b;
+  --sky-night: #1b2140;
+  --sky-blue: #3c5fa8;
+  --sky-gold: #f0a24f;
+  --sky-day: #a9d5f2;
+  --day-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+  display: grid;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: clamp(12px, 3vw, 24px);
+  border-radius: 12px;
+  background: var(--day-bg);
+  color: var(--day-fg);
+  font-weight: normal;
+  text-align: left;
+}
+
+@media (prefers-color-scheme: dark) {
+  .day-view {
+    --day-surface: #191d2b;
+    --day-bg: #11141f;
+    --day-fg: #e7eaf3;
+    --day-muted: #9aa2b6;
+    --day-line: #2c3246;
+    --day-accent: #f0a24f;
+  }
+}
+
+.day-view h1 {
+  margin: 0;
+  font-size: clamp(26px, 5vw, 38px);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.day-view h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.day-muted {
+  color: var(--day-muted);
+  font-size: 14px;
+}
+
+.day-header,
+.day-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.day-row {
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.day-length {
+  font-family: var(--day-mono);
+  font-size: 14px;
+  text-align: right;
+}
+
+.day-length b {
+  display: block;
+  font-family: inherit;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.day-change {
+  color: var(--day-accent);
+}
+
+.day-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.day-view button {
+  padding: 6px 12px;
+  border: 1px solid var(--day-line);
+  border-radius: 6px;
+  background: var(--day-surface);
+  color: var(--day-fg);
+  font: inherit;
+}
+
+.day-view button:disabled {
+  opacity: 0.5;
+}
+
+.day-view button:focus-visible {
+  outline: 2px solid var(--day-accent);
+  outline-offset: 2px;
+}
+
+.day-current {
+  min-width: 10ch;
+  font-family: var(--day-mono);
+  text-align: center;
+}
+
+.day-card {
+  padding: 16px;
+  border: 1px solid var(--day-line);
+  border-radius: 12px;
+  background: var(--day-surface);
+}
+
+.day-scroll {
+  overflow-x: auto;
+}
+
+/* Sky band (SkyBand) */
+.sky-band {
+  display: block;
+  min-width: 560px;
+  font-family: var(--day-mono);
+}
+
+.sky-unknown {
+  fill: var(--day-line);
+}
+
+.sky-night {
+  fill: var(--sky-night);
+  background: var(--sky-night);
+}
+
+.sky-blue {
+  fill: var(--sky-blue);
+  background: var(--sky-blue);
+}
+
+.sky-gold {
+  fill: var(--sky-gold);
+  background: var(--sky-gold);
+}
+
+.sky-day {
+  fill: var(--sky-day);
+  background: var(--sky-day);
+}
+
+.sky-frame {
+  fill: none;
+  stroke: var(--day-line);
+}
+
+.sky-horizon,
+.sky-muted line {
+  stroke: var(--day-muted);
+}
+
+.sky-guide {
+  stroke: var(--day-muted);
+  stroke-dasharray: 2 2;
+}
+
+.sky-muted,
+.sky-muted text {
+  fill: var(--day-muted);
+}
+
+.sky-strong {
+  fill: var(--day-fg);
+}
+
+.sky-arc {
+  fill: none;
+  stroke: var(--sky-gold);
+  stroke-width: 2;
+  stroke-dasharray: 5 5;
+}
+
+.sky-sun {
+  fill: var(--sky-gold);
+}
+
+/* Stage list (StageList) */
+.stage-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 4px 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--day-line);
+}
+
+.stage-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+}
+
+.stage-time {
+  font-family: var(--day-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.stage small {
+  grid-column: 2 / 4;
+  color: var(--day-muted);
+  font-size: 12px;
+}

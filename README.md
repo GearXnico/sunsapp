@@ -1,12 +1,13 @@
 # sunsapp
 
-Type a place and a date range, and see the sunrise, sunset and evening golden hour of every day, in the local time of that place.
+Type a place and a date range, and see the twilight, sunrise, solar noon, golden hour and sunset of every day, in the local time of that place.
 
 ## Features
 
 - Any place name: the backend geocodes it with [Nominatim](https://nominatim.org/) (OpenStreetMap).
 - Sun times from [SunriseSunset.io](https://sunrisesunset.io/api/), in 24-hour local time with the zone shown (for example `America/Santiago (UTC−3)`), DST (daylight saving time) changes included.
-- A table and a Chart.js chart on a fixed 00:00–24:00 axis; polar days and nights show as "—" and gaps.
+- A day sky view: a 24-hour band of night, twilight, blue hour, golden hour and daylight with the sun's arc, the list of stages and Prev/Next between days.
+- A table of every day, and a Chart.js chart on a fixed 00:00–24:00 axis behind a "See variation" button; polar days and nights show as "—" and gaps.
 - Export CSV: download the results as a CSV file, built in the browser.
 - Ranges of up to 366 days. Sun times and geocoding results are cached for 30 days with `Rails.cache`, so repeated searches don't call the external APIs again.
 - Input validation with clear 400 messages, and 500 errors that never leak internal details.
@@ -49,9 +50,9 @@ sunsapp/
 │   └── test/                     mirrors app/; WebMock blocks the network
 ├── frontend/                     React 19 + TypeScript strict (Vite)
 │   └── src/
-│       ├── components/           SearchForm, Results, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
+│       ├── components/           SearchForm, Results, DayView, SkyBand, StageList, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
 │       ├── api/                  client.ts and types.ts: the only place that knows the API URL
-│       ├── lib/                  pure functions: time parsing, chart data and CSV
+│       ├── lib/                  pure functions: time parsing, chart data, day stages and CSV
 │       └── App.tsx               the screen and its state
 ├── docs/                         api.md, architecture.md, adr/
 ├── .github/workflows/            backend.yml and frontend.yml (CI)
@@ -80,7 +81,7 @@ sequenceDiagram
   Core->>Ext: SunriseSunset.io (missing days, one call)
   Core->>DB: save new days
   Ctrl-->>Client: 200 { location, timezone, days }
-  Client-->>UI: table + chart
+  Client-->>UI: day view + table + chart
 ```
 
 ## API
@@ -96,7 +97,10 @@ GET /api/sun_cycle?location=Tokyo&start_date=2026-06-21&end_date=2026-06-21
   "location": "Tokyo",
   "timezone": "Asia/Tokyo",
   "days": [
-    { "date": "2026-06-21", "sunrise": "04:25", "sunset": "19:00", "golden_hour": "18:20", "utc_offset": 540 }
+    {
+      "date": "2026-06-21", "first_light": "02:47", "dawn": "03:55", "sunrise": "04:25", "solar_noon": "11:43",
+      "golden_hour": "18:20", "sunset": "19:00", "dusk": "19:31", "last_light": "20:39", "utc_offset": 540
+    }
   ]
 }
 ```
