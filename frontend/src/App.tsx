@@ -1,38 +1,35 @@
 import { useState } from "react";
 import SearchForm from "./components/SearchForm";
 import Results from "./components/Results";
-import LoadingScreen from "./components/LoadingScreen";
 import type { SunCycleResponse } from "./api/types";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
 function App() {
   const [results, setResults] = useState<SunCycleResponse | null>(null);
-  const [loading, setLoading] = useState(false);
   const hasResults = results !== null && results.days.length > 0;
 
   return (
-    <div className="app app-background">
-      {loading && <LoadingScreen />}
-
-      <div className={`app-container ${hasResults ? "moved-up" : ""}`}>
-        <h1 className="mt-4 mb-4">Sun Data Viewer</h1>
-        <SearchForm setResults={setResults} setLoading={setLoading} />
-      </div>
-      {hasResults && (
-        <div className={`app-container moved-down fade-in`}>
-          <Results data={results} />
-        </div>
-      )}
+    <div className="app">
+      <main className={hasResults ? "shell" : "shell narrow"}>
+        {!hasResults && (
+          <div className="hero">
+            <div className="brand">
+              <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
+                <path className="brand-horizon" d="M3 19h22" />
+                <path className="brand-sun" d="M7 19a7 7 0 0 1 14 0" />
+              </svg>
+              <b>sunsapp</b>
+            </div>
+            <h1>When does the sun rise and set?</h1>
+            <p>Sunrise, sunset, golden hour and twilight for any place, in its local time.</p>
+          </div>
+        )}
+        <SearchForm setResults={setResults} compact={hasResults} />
+        {hasResults && <Results data={results} />}
+      </main>
       <footer className="footer">
-        <div className="container">
-          <span className="footer-text">
-            Powered by{" "}
-            <a className="footer-url" href="https://sunrisesunset.io/api/">
-              SunriseSunset.io
-            </a>
-          </span>
-        </div>
+        Sun times by <a href="https://sunrisesunset.io/">SunriseSunset.io</a> · Places by{" "}
+        <a href="https://nominatim.org/">Nominatim</a> (© OpenStreetMap contributors)
       </footer>
     </div>
   );

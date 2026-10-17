@@ -21,6 +21,8 @@ interface ResultsChartProps {
 
 const MINUTES_PER_DAY = 24 * 60;
 const TICK_STEP = 3 * 60;
+// Readable on the light and the dark surface (Chart.js does not read CSS variables).
+const TEXT = "#7d869b";
 
 const ResultsChart = ({ data }: ResultsChartProps) => {
   const { timezone, days } = data;
@@ -31,9 +33,7 @@ const ResultsChart = ({ data }: ResultsChartProps) => {
     plugins: {
       legend: {
         position: "top",
-        labels: {
-          font: { weight: "bold" },
-        },
+        labels: { color: TEXT },
       },
       tooltip: {
         callbacks: {
@@ -53,24 +53,22 @@ const ResultsChart = ({ data }: ResultsChartProps) => {
         ticks: {
           stepSize: TICK_STEP,
           callback: (val) => formatTime(Number(val)),
-          color: "#FFD88C",
+          color: TEXT,
         },
         title: {
           display: true,
           text: `Local time (${timezone})`,
-          color: "#FFD88C",
-          font: { weight: "bold" },
+          color: TEXT,
         },
       },
       x: {
         ticks: {
-          color: "#FFD88C",
+          color: TEXT,
         },
         title: {
           display: true,
           text: "Date",
-          color: "#FFD88C",
-          font: { weight: "bold" },
+          color: TEXT,
         },
       },
     },
