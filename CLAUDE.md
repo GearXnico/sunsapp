@@ -86,7 +86,7 @@ npm audit --audit-level=high
 
 The frontend reads the API URL from `VITE_API_URL` (default `http://localhost:3000`).
 
-CI runs `.github/workflows/backend.yml` and `.github/workflows/frontend.yml` on every pull request and on push to `develop` and `main`.
+CI runs `.github/workflows/backend.yml` and `.github/workflows/frontend.yml` on every pull request and on push to `develop` and `main`. On push to `main`, `.github/workflows/pages.yml` publishes the frontend to GitHub Pages and Render deploys the API from `render.yaml` (ADR 0009).
 
 ## Git flow (ADR 0002)
 

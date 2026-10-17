@@ -56,6 +56,6 @@ compose.yml              local development: backend :3000, frontend :3001 (Vite 
 ## Environments
 
 - **Local:** `docker compose up`, or `bin/rails server` and `npm run dev` by hand. No nginx; the frontend is the Vite dev server.
-- **Production:** not deployed yet. `npm run build` writes a static site to `frontend/dist/`, and `backend/Dockerfile` builds the API image. Where to host them is [ADR 0009](adr/0009-free-deployment.md) (proposed).
+- **Production:** the API runs on Render's free plan from `render.yaml` (it sleeps when idle and its cache starts empty after a restart), and the frontend is on GitHub Pages, built by `.github/workflows/pages.yml`. Both deploy from `main` ([ADR 0009](adr/0009-free-deployment.md)).
 
 Why the logic lives in `app/core/sun_cycle/`: see [ADR 0001](adr/0001-monorepo-rails-api-react.md). All decisions: [ADR index](adr/README.md).

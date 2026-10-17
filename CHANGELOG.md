@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Added
 
 - `GET /api/sun_cycle` answers `429 Too Many Requests` when the same IP sends more than 20 requests in a minute, so one client cannot use up the SunriseSunset.io quota or the Nominatim limit (ADR 0012).
+- Free deployment from `main` (ADR 0009): the API on Render's free plan from `render.yaml`, and the frontend on GitHub Pages from `.github/workflows/pages.yml`.
 
 ## [1.1.0] - 2026-10-17
 
