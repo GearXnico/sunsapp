@@ -50,7 +50,7 @@ sunsapp/
 │   └── test/                     mirrors app/; WebMock blocks the network
 ├── frontend/                     React 19 + TypeScript strict (Vite)
 │   └── src/
-│       ├── components/           SearchForm, Results, DayView, SkyBand, StageList, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
+│       ├── components/           SearchForm, Results, DayView, SkyBand, KeyTimes, Icon, ResultsChart, ExportCsvButton, ErrorMessage, LoadingScreen
 │       ├── api/                  client.ts and types.ts: the only place that knows the API URL
 │       ├── lib/                  pure functions: time parsing, chart data, day stages and CSV
 │       └── App.tsx               the screen and its state
