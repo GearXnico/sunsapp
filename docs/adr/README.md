@@ -14,7 +14,7 @@ Each ADR records one decision: its context, the options considered, the decision
 | [0008](0008-chart-time-axis.md) | Chart.js with a fixed local-time axis | Accepted |
 | [0009](0009-free-deployment.md) | Free deployment | Proposed |
 | [0010](0010-geocoding-provider.md) | Geocoding provider | Proposed |
-| [0011](0011-ambiguous-places.md) | Choosing between ambiguous places | Proposed |
+| [0011](0011-ambiguous-places.md) | Choosing between ambiguous places | Accepted |
 | [0012](0012-rate-limiting.md) | Rate limiting per IP | Proposed |
 | [0013](0013-extended-chart.md) | Extended chart: golden hour bands and day length | Proposed |
 | [0014](0014-bilingual-ui.md) | Bilingual interface (Spanish and English) | Proposed |

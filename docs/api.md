@@ -1,8 +1,9 @@
 # API
 
 The backend exposes one endpoint. It returns, for a place and a date range, the sunrise, the
-sunset and the start of the evening golden hour of each day, in the local time of the place
-(contract v2, [ADR 0006](adr/0006-local-time-of-place.md)).
+sunset and the start of the evening golden hour of each day, in the local time of the place, plus
+the name of the place the geocoder matched (contract v3; local time from
+[ADR 0006](adr/0006-local-time-of-place.md), the matched place from [ADR 0011](adr/0011-ambiguous-places.md)).
 
 Base URL in development: `http://localhost:3000`.
 
@@ -31,6 +32,7 @@ GET /api/sun_cycle?location=santiago&start_date=2026-09-05&end_date=2026-09-06
 ```json
 {
   "location": "Santiago",
+  "matched_place": "Santiago, Región Metropolitana de Santiago, Chile",
   "timezone": "America/Santiago",
   "days": [
     { "date": "2026-09-05", "sunrise": "07:21", "sunset": "18:51", "golden_hour": "18:17", "utc_offset": -240 },
@@ -46,6 +48,7 @@ Chile moves its clocks forward on 2026-09-06, so `utc_offset` changes inside the
 | Field | Type | Meaning |
 |---|---|---|
 | `location` | string | The normalized `location` parameter (not the name the geocoder found). |
+| `matched_place` | string or null | Name of the place the geocoder matched, as Nominatim writes it, so the user can tell which "Santiago" the times belong to. `null` if Nominatim sent no name (v3). |
 | `timezone` | string | IANA (Internet Assigned Numbers Authority) zone name of the place, for example `Asia/Tokyo`. |
 | `days[].date` | string | `YYYY-MM-DD`, in ascending order. |
 | `days[].sunrise` | string or null | Local time, 24-hour, zero-padded `HH:MM`. |
@@ -83,7 +86,7 @@ backtrace line, and `location` is filtered from the request logs.
 Both caches use `Rails.cache` (Solid Cache in production, the memory store in development) and
 expire after 30 days ([ADR 0017](adr/README.md)).
 
-- Geocoding: Nominatim (5 s timeout, own User-Agent). Successful results are cached by location;
+- Geocoding: Nominatim (5 s timeout, own User-Agent). Successful results (coordinates and matched name) are cached by location;
   a place that is not found is asked again next time.
 - Sun times: one cache entry per day, keyed by the coordinates rounded to 4 decimals (about 11 m)
   and the date. Only the days missing from the cache are fetched, from the first missing day to the

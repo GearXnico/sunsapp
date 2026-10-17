@@ -8,8 +8,8 @@ sunsapp takes a location and a date range and shows, for each day, the sunrise, 
 |---|---|
 | Frontend (React + TypeScript, Vite) | Search form, results table and chart. Calls the backend through one API client. |
 | Backend (Rails 8.1 API) | `GET /api/sun_cycle`: validates the request, geocodes the location, gets the sun times and caches them. |
-| `Rails.cache` | Solid Cache in production, the memory store in development. Holds one entry per place and day (coordinates rounded to 4 decimals + date) and the successful geocoding results, both for 30 days. |
-| Nominatim | Turns a location name into coordinates. |
+| `Rails.cache` | Solid Cache in production, the memory store in development. Holds one entry per place and day (coordinates rounded to 4 decimals + date) and the successful geocoding results (coordinates and matched name), both for 30 days. |
+| Nominatim | Turns a location name into coordinates and the name of the matched place. |
 | SunriseSunset.io | Returns sunrise, sunset and golden hour for coordinates and dates. |
 
 There is no table of sun times: everything the app stores is cache and can be lost without harm.
@@ -33,7 +33,7 @@ flowchart LR
 ```
 
 1. `SunCycle::Query` validates the params; any failure is a 400 before an external call.
-2. `SunCycle::GeocodingClient` returns the coordinates, from the cache or from Nominatim; no match is a 400.
+2. `SunCycle::GeocodingClient` returns the coordinates and the matched name, from the cache or from Nominatim; no match is a 400.
 3. `SunCycle::Lookup` reads each day from the cache and fetches only the missing ones, in one call to SunriseSunset.io (two for 366 days).
 4. The controller renders `{ location, timezone, days }`, a 404 when there are no days, or a generic 500.
 
