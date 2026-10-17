@@ -4,6 +4,12 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [Unreleased]
+
+### Added
+
+- `GET /api/sun_cycle` answers `429 Too Many Requests` when the same IP sends more than 20 requests in a minute, so one client cannot use up the SunriseSunset.io quota or the Nominatim limit (ADR 0012).
+
 ## [1.1.0] - 2026-10-17
 
 ### Added

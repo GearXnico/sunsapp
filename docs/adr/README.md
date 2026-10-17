@@ -15,7 +15,7 @@ Each ADR records one decision: its context, the options considered, the decision
 | [0009](0009-free-deployment.md) | Free deployment | Proposed |
 | [0010](0010-geocoding-provider.md) | Geocoding provider | Proposed |
 | [0011](0011-ambiguous-places.md) | Choosing between ambiguous places | Accepted |
-| [0012](0012-rate-limiting.md) | Rate limiting per IP | Proposed |
+| [0012](0012-rate-limiting.md) | Rate limiting per IP | Accepted |
 | [0013](0013-extended-chart.md) | Extended chart: golden hour bands and day length | Superseded by 0018 |
 | [0014](0014-bilingual-ui.md) | Bilingual interface (Spanish and English) | Proposed |
 | [0015](0015-csv-export.md) | Export results to CSV | Accepted |
