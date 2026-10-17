@@ -8,7 +8,7 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
   use_memory_cache
 
   setup do
-    Geocoder::Lookup::Test.add_stub("Santiago", [ { "coordinates" => [ -33.4489, -70.6693 ] } ])
+    Geocoder::Lookup::Test.add_stub("Santiago", [ { "coordinates" => [ -33.4489, -70.6693 ], "address" => "Santiago, Región Metropolitana de Santiago, Chile" } ])
   end
 
   def get_sun_cycle(params)
@@ -64,6 +64,7 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     assert_equal(
       {
         "location" => "Santiago",
+        "matched_place" => "Santiago, Región Metropolitana de Santiago, Chile",
         "timezone" => "America/Santiago",
         "days" => [
           { "date" => "2026-09-05", "sunrise" => "07:21", "sunset" => "18:51", "golden_hour" => "18:17", "utc_offset" => -240 },
@@ -206,6 +207,17 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "Santiago, Chile", json["location"]
     assert_requested stub, times: 1
+  end
+
+  test "returns a null matched place when the geocoder sends no name" do
+    Geocoder::Lookup::Test.add_stub("Tokyo", [ { "coordinates" => [ 35.6762, 139.6503 ] } ])
+    stub_sunrise_sunset(Date.new(2026, 6, 21), body: sunrise_sunset_fixture("tokyo"))
+
+    get_sun_cycle(location: "Tokyo", start_date: "2026-06-21", end_date: "2026-06-21")
+
+    assert_response :success
+    assert json.key?("matched_place")
+    assert_nil json["matched_place"]
   end
 
   test "allows CORS only from the configured origin" do
