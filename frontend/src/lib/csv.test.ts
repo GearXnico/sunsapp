@@ -59,8 +59,7 @@ describe("csvFileName", () => {
   });
 
   it("slugs zones with odd characters and handles no days", () => {
-    expect(csvFileName({ location: "x", timezone: "America/Argentina/Buenos_Aires", days: [] })).toBe(
-      "sunsapp-america-argentina-buenos-aires.csv",
-    );
+    const data = { location: "x", matched_place: null, timezone: "America/Argentina/Buenos_Aires", days: [] };
+    expect(csvFileName(data)).toBe("sunsapp-america-argentina-buenos-aires.csv");
   });
 });
