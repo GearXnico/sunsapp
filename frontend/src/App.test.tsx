@@ -15,9 +15,11 @@ describe("App", () => {
     render(<App />);
 
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
-    await user.type(screen.getByPlaceholderText("Location"), "Santiago");
-    await user.type(screen.getByLabelText("Start Date"), "2026-06-21");
-    await user.type(screen.getByLabelText("End Date"), "2026-06-22");
+    expect(screen.getByRole("heading", { name: "When does the sun rise and set?" })).toBeInTheDocument();
+    expect(screen.getByText("Up to 366 days.")).toBeInTheDocument();
+    await user.type(screen.getByLabelText("Location"), "Santiago");
+    await user.type(screen.getByLabelText("From"), "2026-06-21");
+    await user.type(screen.getByLabelText("To"), "2026-06-22");
     await user.click(screen.getByRole("button", { name: "Search" }));
 
     expect(await screen.findByRole("table")).toBeInTheDocument();
@@ -26,5 +28,17 @@ describe("App", () => {
     expect(screen.getByRole("img", { name: /^Sky on 2026-06-21/ })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "See variation" }));
     expect(screen.getByTestId("line-chart")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "When does the sun rise and set?" })).not.toBeInTheDocument();
+    expect(screen.getByRole("form", { name: "Search" })).toHaveClass("inline");
+  });
+
+  it("credits SunriseSunset.io and Nominatim in the footer", () => {
+    render(<App />);
+
+    expect(screen.getByRole("contentinfo")).toHaveTextContent(
+      "Sun times by SunriseSunset.io · Places by Nominatim (© OpenStreetMap contributors)",
+    );
+    expect(screen.getByRole("link", { name: "SunriseSunset.io" })).toHaveAttribute("href", "https://sunrisesunset.io/");
+    expect(screen.getByRole("link", { name: "Nominatim" })).toHaveAttribute("href", "https://nominatim.org/");
   });
 });
