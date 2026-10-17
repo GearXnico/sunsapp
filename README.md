@@ -55,7 +55,8 @@ sunsapp/
 │       ├── lib/                  pure functions: time parsing, chart data, day stages and CSV
 │       └── App.tsx               the screen and its state
 ├── docs/                         api.md, architecture.md, adr/
-├── .github/workflows/            backend.yml and frontend.yml (CI)
+├── .github/workflows/            backend.yml and frontend.yml (CI), pages.yml (frontend deploy)
+├── render.yaml                   Render Blueprint for the API
 ├── .claude/skills/               Claude Code project skills
 └── compose.yml                   local development with Docker
 ```
@@ -127,6 +128,13 @@ npm run lint && npm run typecheck
 npm run build                               # production build in dist/
 npm audit --audit-level=high
 ```
+
+## Deployment
+
+Both parts deploy from `main` ([ADR 0009](docs/adr/0009-free-deployment.md)):
+
+- **API:** Render's free plan, from the Blueprint in [render.yaml](render.yaml). It sleeps after 15 minutes without traffic, so the first search after a pause takes about a minute, and its cache starts empty after a restart.
+- **Frontend:** GitHub Pages, published by [.github/workflows/pages.yml](.github/workflows/pages.yml) with `VITE_API_URL` from the `API_URL` repository variable.
 
 ## Documentation
 
