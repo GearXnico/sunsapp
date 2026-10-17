@@ -67,9 +67,15 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
         "matched_place" => "Santiago, Región Metropolitana de Santiago, Chile",
         "timezone" => "America/Santiago",
         "days" => [
-          { "date" => "2026-09-05", "sunrise" => "07:21", "sunset" => "18:51", "golden_hour" => "18:17", "utc_offset" => -240 },
-          { "date" => "2026-09-06", "sunrise" => "08:20", "sunset" => "19:51", "golden_hour" => "19:18", "utc_offset" => -180 },
-          { "date" => "2026-09-07", "sunrise" => "08:18", "sunset" => "19:52", "golden_hour" => "19:19", "utc_offset" => -180 }
+          { "date" => "2026-09-05", "first_light" => "05:56", "dawn" => "06:55", "sunrise" => "07:21",
+            "solar_noon" => "13:06", "golden_hour" => "18:17", "sunset" => "18:51", "dusk" => "19:17",
+            "last_light" => "20:16", "utc_offset" => -240 },
+          { "date" => "2026-09-06", "first_light" => "06:55", "dawn" => "07:54", "sunrise" => "08:20",
+            "solar_noon" => "14:06", "golden_hour" => "19:18", "sunset" => "19:51", "dusk" => "20:17",
+            "last_light" => "21:16", "utc_offset" => -180 },
+          { "date" => "2026-09-07", "first_light" => "06:53", "dawn" => "07:52", "sunrise" => "08:18",
+            "solar_noon" => "14:05", "golden_hour" => "19:19", "sunset" => "19:52", "dusk" => "20:18",
+            "last_light" => "21:17", "utc_offset" => -180 }
         ]
       },
       json
@@ -86,7 +92,9 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_equal "Asia/Tokyo", json["timezone"]
     assert_equal(
-      [ { "date" => "2026-06-21", "sunrise" => "04:25", "sunset" => "19:00", "golden_hour" => "18:20", "utc_offset" => 540 } ],
+      [ { "date" => "2026-06-21", "first_light" => "02:47", "dawn" => "03:55", "sunrise" => "04:25",
+          "solar_noon" => "11:43", "golden_hour" => "18:20", "sunset" => "19:00", "dusk" => "19:31",
+          "last_light" => "20:39", "utc_offset" => 540 } ],
       json["days"]
     )
   end
@@ -99,7 +107,8 @@ class Api::SunCycleControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_equal(
-      [ { "date" => "2026-06-21", "sunrise" => nil, "sunset" => nil, "golden_hour" => nil, "utc_offset" => 120 } ],
+      [ { "date" => "2026-06-21", "first_light" => nil, "dawn" => nil, "sunrise" => nil, "solar_noon" => "12:44",
+          "golden_hour" => nil, "sunset" => nil, "dusk" => nil, "last_light" => nil, "utc_offset" => 120 } ],
       json["days"]
     )
   end

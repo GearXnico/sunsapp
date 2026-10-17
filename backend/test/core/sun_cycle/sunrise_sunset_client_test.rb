@@ -29,9 +29,12 @@ class SunCycle::SunriseSunsetClientTest < ActiveSupport::TestCase
     assert_equal "America/Santiago", result[:timezone]
     assert_equal(
       [
-        { date: Date.new(2026, 9, 5), sunrise: "07:21", sunset: "18:51", golden_hour: "18:17", utc_offset: -240 },
-        { date: Date.new(2026, 9, 6), sunrise: "08:20", sunset: "19:51", golden_hour: "19:18", utc_offset: -180 },
-        { date: Date.new(2026, 9, 7), sunrise: "08:18", sunset: "19:52", golden_hour: "19:19", utc_offset: -180 }
+        { date: Date.new(2026, 9, 5), first_light: "05:56", dawn: "06:55", sunrise: "07:21", solar_noon: "13:06",
+          golden_hour: "18:17", sunset: "18:51", dusk: "19:17", last_light: "20:16", utc_offset: -240 },
+        { date: Date.new(2026, 9, 6), first_light: "06:55", dawn: "07:54", sunrise: "08:20", solar_noon: "14:06",
+          golden_hour: "19:18", sunset: "19:51", dusk: "20:17", last_light: "21:16", utc_offset: -180 },
+        { date: Date.new(2026, 9, 7), first_light: "06:53", dawn: "07:52", sunrise: "08:18", solar_noon: "14:05",
+          golden_hour: "19:19", sunset: "19:52", dusk: "20:18", last_light: "21:17", utc_offset: -180 }
       ],
       result[:days]
     )
@@ -43,8 +46,11 @@ class SunCycle::SunriseSunsetClientTest < ActiveSupport::TestCase
     result = fetch(coordinates: [ 35.6762, 139.6503 ])
 
     assert_equal "Asia/Tokyo", result[:timezone]
-    assert_equal [ { date: JUNE_21, sunrise: "04:25", sunset: "19:00", golden_hour: "18:20", utc_offset: 540 } ],
-                 result[:days]
+    assert_equal(
+      [ { date: JUNE_21, first_light: "02:47", dawn: "03:55", sunrise: "04:25", solar_noon: "11:43",
+          golden_hour: "18:20", sunset: "19:00", dusk: "19:31", last_light: "20:39", utc_offset: 540 } ],
+      result[:days]
+    )
   end
 
   test "keeps polar days with null times" do
@@ -53,18 +59,34 @@ class SunCycle::SunriseSunsetClientTest < ActiveSupport::TestCase
     result = fetch(coordinates: [ 69.6492, 18.9553 ])
 
     assert_equal "Europe/Oslo", result[:timezone]
-    assert_equal [ { date: JUNE_21, sunrise: nil, sunset: nil, golden_hour: nil, utc_offset: 120 } ], result[:days]
+    assert_equal(
+      [ { date: JUNE_21, first_light: nil, dawn: nil, sunrise: nil, solar_noon: "12:44", golden_hour: nil,
+          sunset: nil, dusk: nil, last_light: nil, utc_offset: 120 } ],
+      result[:days]
+    )
   end
 
   test "turns times that are not 24-hour HH:MM into null" do
     stub_sunrise_sunset(JUNE_21, body: sunrise_sunset_body(JUNE_21, sunrise: "7:46:34 AM", sunset: "25:10",
-                                                                    golden_hour: "-"))
+                                                                    golden_hour: "-", solar_noon: "12:60"))
 
     day = fetch[:days].first
 
     assert_nil day[:sunrise]
     assert_nil day[:sunset]
     assert_nil day[:golden_hour]
+    assert_nil day[:solar_noon]
+  end
+
+  test "returns null for twilight times the API does not send" do
+    body = JSON.parse(sunrise_sunset_body(JUNE_21))
+    body["results"].first.except!("first_light", "dawn", "dusk", "last_light")
+    stub_sunrise_sunset(JUNE_21, body: body.to_json)
+
+    day = fetch[:days].first
+
+    assert_equal [ nil, nil, nil, nil ], day.values_at(:first_light, :dawn, :dusk, :last_light)
+    assert_equal "07:46", day[:sunrise]
   end
 
   test "accepts times without seconds" do
