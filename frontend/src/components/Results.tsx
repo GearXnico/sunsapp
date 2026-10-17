@@ -9,7 +9,7 @@ interface ResultsProps {
 const EMPTY = "—";
 
 function Results({ data }: ResultsProps) {
-  const { location, timezone, days } = data;
+  const { location, matched_place: matchedPlace, timezone, days } = data;
   // A DST change inside the range gives days with different offsets: show it per row.
   const offsets = new Set(days.map((day) => day.utc_offset));
   const offsetPerRow = offsets.size > 1;
@@ -20,6 +20,7 @@ function Results({ data }: ResultsProps) {
   return (
     <div className="table-container">
       <h1>{location}</h1>
+      {matchedPlace && <p className="matched-place">Showing {matchedPlace}</p>}
       <p>{zoneLabel}</p>
       <div className="chart-container mb-4">
         <ResultsChart data={data} />
