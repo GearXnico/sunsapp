@@ -1,4 +1,4 @@
-/* Day sky view (ADR 0018), styled per the R5 wireframe (ADR 0016). Tokens live in index.css. */
+/* Day sky view (ADR 0018), in the visual style of ADR 0016. Tokens live in index.css. */
 .day-view {
   display: grid;
   gap: 16px;
