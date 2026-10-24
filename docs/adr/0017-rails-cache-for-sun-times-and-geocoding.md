@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (2026-10-15), decided by Nico. Supersedes the cache part of ADR 0007.
+Accepted (2026-10-15). Supersedes the cache part of ADR 0007.
 
 ## Context
 

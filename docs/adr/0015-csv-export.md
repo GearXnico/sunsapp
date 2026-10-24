@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (Nico, 2026-10-16). Proposed 2026-10-15.
+Accepted (2026-10-16). Proposed 2026-10-15.
 
 ## Context
 
@@ -10,7 +10,7 @@ People planning photos want the times in a spreadsheet or calendar. Today they c
 
 ## Options considered
 
-1. **Build the CSV (comma-separated values) in the browser:** a pure function turns the response into CSV and a button downloads it as a Blob; no API change.
+1. **Build the CSV in the browser:** a pure function turns the response into CSV and a button downloads it as a Blob; no API change.
 2. **A `format=csv` option on the API:** works without the UI, but changes the contract and adds a second response type.
 
 ## Decision

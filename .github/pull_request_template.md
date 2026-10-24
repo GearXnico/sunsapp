@@ -1,4 +1,4 @@
-<!-- One PR per plan task, targeting `develop`. Nico reviews and merges (rebase & merge). -->
+<!-- One focused PR per change, targeting `develop`. The maintainer reviews and merges (rebase & merge). -->
 
 ## Before
 
@@ -6,7 +6,7 @@
 
 ## After
 
-<!-- What changes with this PR. Link the plan task (T#) and any ADR. -->
+<!-- What changes with this PR. Link the related issue and any ADR. -->
 
 ## How to test
 

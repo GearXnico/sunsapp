@@ -7,11 +7,11 @@ description: Use whenever a change touches the request or response of GET /api/s
 
 The JSON of `GET /api/sun_cycle` is a contract between Rails and React. Change every side in the same PR so they never drift apart again (the time format bug came from that).
 
-1. Write down the change first: field added, renamed, removed, or its format (for example `sunrise` as `HH:MM` 24 h plus `timezone`). Removing or renaming a field is a breaking change: ask Nico before doing it.
+1. Write down the change first: field added, renamed, removed, or its format (for example `sunrise` as `HH:MM` 24 h plus `timezone`). Removing or renaming a field is a breaking change: ask the maintainer before doing it.
 2. Backend response, in `backend/`:
    - The controller `app/controllers/api/sun_cycle_controller.rb` builds the response.
-   - The logic lives in `app/core/sun_cycle/` (`query.rb`, `lookup.rb`, the clients) once T6 lands; before that, `app/services/sun_cycle_fetcher.rb`.
-   - If a stored field changes, add a migration that only adds columns.
+   - The logic lives in `app/core/sun_cycle/` (`query.rb`, `lookup.rb`, the clients).
+   - If a cached field changes, bump the cache key version in `lookup.rb` so old entries are not read.
 3. Frontend type, in `frontend/src/api/`: update the `SunCycleDay` type and the client that parses the response. Fix every compile error that `npm run typecheck` shows; do not use `any` or casts to silence them.
 4. Tests on both sides:
    - Backend: controller test in `backend/test/controllers/api/` asserting the exact JSON keys and formats, and core tests in `backend/test/core/sun_cycle/`. External APIs are stubbed with WebMock; no test hits the network.

@@ -9,7 +9,7 @@ Type a place and a date range, and see the twilight, sunrise, solar noon, golden
 ## Features
 
 - Any place name: the backend geocodes it with [Nominatim](https://nominatim.org/) (OpenStreetMap).
-- Sun times from [SunriseSunset.io](https://sunrisesunset.io/api/), in 24-hour local time with the zone shown (for example `America/Santiago (UTC−3)`), DST (daylight saving time) changes included.
+- Sun times from [SunriseSunset.io](https://sunrisesunset.io/api/), in 24-hour local time with the zone shown (for example `America/Santiago (UTC−3)`), DST changes included.
 - A day sky view: a 24-hour band of night, twilight, blue hour, golden hour and daylight with the sun's arc, the list of stages and Prev/Next between days.
 - A table of every day, and a Chart.js chart on a fixed 00:00–24:00 axis behind a "See variation" button; polar days and nights show as "—" and gaps.
 - Export CSV: download the results as a CSV file, built in the browser.
@@ -150,4 +150,4 @@ Both parts deploy from `main` ([ADR 0009](docs/adr/0009-free-deployment.md)):
 
 ## Contributing
 
-The project uses git-flow with rebase & merge, Conventional Commits and one PR (pull request) per task targeting `develop` ([ADR 0002](docs/adr/0002-git-flow-rebase-merge.md)). Branch names, test rules, security rules and the definition of done are in [CLAUDE.md](CLAUDE.md), which applies to people and to Claude Code alike.
+The project uses git-flow with rebase & merge, Conventional Commits and one focused PR per change targeting `develop` ([ADR 0002](docs/adr/0002-git-flow-rebase-merge.md)). Branch names, test rules and security rules are in [AGENTS.md](AGENTS.md), which applies to people and to coding agents alike.

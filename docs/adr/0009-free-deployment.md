@@ -35,11 +35,11 @@ None keeps a persistent disk at $0.
 
 ## Decision
 
-Nico chose Render on 2026-10-17. The API runs on Render's free plan from `render.yaml` (Docker, deploys `main`), and its cache is lost on restart. The frontend is on GitHub Pages, built by `.github/workflows/pages.yml` on push to `main` with `VITE_API_URL` from the `API_URL` repository variable. `CORS_ORIGINS` is the Pages origin, `https://gearxnico.github.io`.
+Render, chosen on 2026-10-17. The API runs on Render's free plan from `render.yaml` (Docker, deploys `main`), and its cache is lost on restart. The frontend is on GitHub Pages, built by `.github/workflows/pages.yml` on push to `main` with `VITE_API_URL` from the `API_URL` repository variable. `CORS_ORIGINS` is the Pages origin, `https://gearxnico.github.io`.
 
 ## Consequences
 
-- Publishing needs a new deploy workflow and secrets in GitHub, which is a change Nico must approve (CLAUDE.md, "Ask first").
+- Publishing needs a deploy workflow and a repository variable in GitHub, and any change to them needs the maintainer's approval (`AGENTS.md`, "Ask before").
 - Without a persistent disk the cache is empty after each restart; the rate limit (ADR 0012) matters more.
 - A backend that sleeps makes the first search slow; the frontend should keep its loading screen.
 - If a free tier changes or ends, the Dockerfile and the static `dist/` keep the move to another host small.

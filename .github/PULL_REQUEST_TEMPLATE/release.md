@@ -1,4 +1,4 @@
-<!-- Release PR: `release/x.y.z` → `main`. Open it with `?template=release.md`. Nico merges (rebase & merge) and creates the tag. -->
+<!-- Release PR: `release/x.y.z` → `main`. Open it with `?template=release.md`. The maintainer merges (rebase & merge) and creates the tag. -->
 
 # Release x.y.z
 
@@ -28,5 +28,5 @@
 
 - [ ] `CHANGELOG.md` has the `## [x.y.z]` section at the top
 - [ ] CI green on this branch
-- [ ] After the merge: tag `vx.y.z` on `main` (Nico)
+- [ ] After the merge: tag `vx.y.z` on `main` (maintainer)
 - [ ] After the merge: `develop` brought up to date with `main`
