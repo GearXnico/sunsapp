@@ -100,6 +100,9 @@ describe("SearchForm", () => {
 
     expect(screen.getByRole("button", { name: "Searching…" })).toBeDisabled();
     expect(screen.getByRole("status")).toHaveTextContent("Looking up the sun for Santiago…");
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "The API sleeps when idle, so the first search can take about a minute.",
+    );
 
     resolve(sunCycle);
     expect(await screen.findByRole("button", { name: "Search" })).toBeEnabled();

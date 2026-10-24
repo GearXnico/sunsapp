@@ -11,6 +11,7 @@ function LoadingScreen({ place }: LoadingScreenProps) {
         <path d="M20 3v5M20 32v5M3 20h5M32 20h5M8 8l3.5 3.5M28.5 28.5L32 32M8 32l3.5-3.5M28.5 11.5L32 8" />
       </svg>
       <span>Looking up the sun for {place}…</span>
+      <small>The API sleeps when idle, so the first search can take about a minute.</small>
     </div>
   );
 }
