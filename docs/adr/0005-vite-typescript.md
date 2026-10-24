@@ -14,7 +14,7 @@ The app was plain JavaScript. The chart bug comes from an unchecked assumption a
 response: `parseTime` expects `"HH:MM"`, but nothing states or checks the format the backend
 sends. A typed contract between the API client and the components makes that shape explicit.
 
-The project is part of a portfolio, so it should also show React skills.
+The frontend should also follow current React practice.
 
 ## Options considered
 
