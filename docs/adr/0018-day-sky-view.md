@@ -2,8 +2,7 @@
 
 ## Status
 
-Accepted (2026-10-16), decided by Nico (approved wireframe for task R3). Supersedes ADR 0013 and
-changes the role of the ADR 0008 chart.
+Accepted (2026-10-16), from an approved wireframe. Supersedes ADR 0013 and changes the role of the ADR 0008 chart.
 
 ## Context
 

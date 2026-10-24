@@ -6,7 +6,7 @@ Superseded by [0018](0018-day-sky-view.md) (2026-10-16). Proposed (2026-10-15).
 
 ## Context
 
-The chart shows three lines (sunrise, sunset, start of the evening golden hour) on a fixed 00:00–24:00 local-time axis (ADR 0008). Bands for the golden hour and a day-length series were left out on purpose (decision 4 of the planning log) to keep the fix small. For someone planning photos, the window between the golden hour start and sunset, and how long the day is, are the useful parts.
+The chart shows three lines (sunrise, sunset, start of the evening golden hour) on a fixed 00:00–24:00 local-time axis (ADR 0008). Bands for the golden hour and a day-length series were left out on purpose to keep the fix small. For someone planning photos, the window between the golden hour start and sunset, and how long the day is, are the useful parts.
 
 ## Options considered
 

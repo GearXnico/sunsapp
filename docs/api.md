@@ -67,7 +67,7 @@ Chile moves its clocks forward on 2026-09-06, so `utc_offset` changes inside the
 | `days[].sunset` | string or null | Same format. |
 | `days[].dusk` | string or null | Dusk, same format (v3). |
 | `days[].last_light` | string or null | End of evening twilight, same format (v3). |
-| `days[].utc_offset` | integer or null | Minutes from UTC (coordinated universal time) on that day; it can change inside a range because of DST (daylight saving time). |
+| `days[].utc_offset` | integer or null | Minutes from UTC on that day; it can change inside a range because of DST. |
 
 - A time is `null` when the sun does not rise or set that day (polar day or night), or when
   SunriseSunset.io did not send it or sent a value that is not a valid time. The UI shows "—", the
@@ -114,7 +114,7 @@ expire after 30 days ([ADR 0017](adr/README.md)).
 
 ## CORS
 
-CORS (cross-origin resource sharing) is allowed on `/api/*` for the `GET`, `HEAD` and `OPTIONS`
+CORS is allowed on `/api/*` for the `GET`, `HEAD` and `OPTIONS`
 methods, only from the origins in `CORS_ORIGINS` (comma-separated). The default is
 `http://localhost:3001`, the Vite dev server. See `backend/.env.example`.
 

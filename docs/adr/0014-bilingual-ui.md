@@ -6,7 +6,7 @@ Proposed (2026-10-15)
 
 ## Context
 
-All UI text is in English and written inside the components. Nico and many likely users speak Spanish. API error messages are English strings that the UI shows as they come.
+All UI text is in English and written inside the components. Many likely users speak Spanish. API error messages are English strings that the UI shows as they come.
 
 ## Options considered
 

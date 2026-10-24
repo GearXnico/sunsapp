@@ -21,5 +21,5 @@ Keep Nominatim while the app is private or has few users. Move to a provider wit
 ## Consequences
 
 - No new secret or service for now.
-- A move needs Nico's approval (new external service) and a check of the provider's terms and quota in its official docs.
+- A move needs the maintainer's approval (new external service) and a check of the provider's terms and quota in its official docs.
 - Results (coordinates, ranking of ambiguous names) may change with the provider; see ADR 0011.
