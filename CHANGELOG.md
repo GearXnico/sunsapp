@@ -4,6 +4,13 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [Unreleased]
+
+### Security
+
+- `crass` 1.0.8 (through `rails-html-sanitizer`), which fixes a CSS sanitizer bypass (GHSA-pq4g-8rxf-4g29). The API does not sanitize user HTML, so the app was not exposed, but `bundler-audit` failed the backend CI.
+- `undici` 7.30.1 (a test-only dependency through `jsdom`), which fixes three high advisories. It is not part of the published frontend.
+
 ## [1.2.1] - 2026-10-17
 
 ### Changed
