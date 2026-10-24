@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Changed
 
+- The loading message says that the API sleeps when idle, so the first search can take about a minute (#31).
 - Agent guidance moves to `AGENTS.md`; `CLAUDE.md` only imports it.
 - The README, the ADRs, the PR templates and the project skills use a neutral voice, without plan task numbers or personal references.
 
