@@ -1,4 +1,4 @@
-// The API sends local times as 24-hour "HH:MM" (contract v2). Anything else is rejected
+// The API sends local times as 24-hour "HH:MM". Anything else is rejected
 // instead of guessed, so a format change shows up as a gap and not as a wrong point.
 const TIME_PATTERN = /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/;
 
