@@ -206,6 +206,11 @@ button.primary {
   animation: spin 1.6s linear infinite;
 }
 
+.loading small {
+  font-size: 0.85em;
+  text-align: center;
+}
+
 .loading circle {
   stroke: none;
 }
