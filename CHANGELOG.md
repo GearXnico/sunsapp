@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Agent guidance moves to `AGENTS.md`; `CLAUDE.md` only imports it.
+- The README, the ADRs, the PR templates and the project skills use a neutral voice, without plan task numbers or personal references.
+
 ### Security
 
 - `crass` 1.0.8 (through `rails-html-sanitizer`), which fixes a CSS sanitizer bypass (GHSA-pq4g-8rxf-4g29). The API does not sanitize user HTML, so the app was not exposed, but `bundler-audit` failed the backend CI.

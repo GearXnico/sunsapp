@@ -27,7 +27,7 @@ APIs (SunriseSunset.io and Nominatim) must never be called from tests.
 - **Backend:** Minitest (Rails default) with WebMock blocking all real HTTP and stubbing
   SunriseSunset.io, and Geocoder's built-in `:test` lookup for locations. Tests mirror `app/`
   (`test/controllers`, `test/services`, `test/models`).
-- **Frontend:** Vitest with Testing Library (task T4, ADR 0005).
+- **Frontend:** Vitest with Testing Library (ADR 0005).
 - **Coverage:** 80 % of lines minimum. SimpleCov fails `bin/rails test` below it; Vitest does the
   same on the frontend.
 - **CI:** workflows in the root `.github/workflows/`, one per app, on pull requests and pushes to
@@ -39,7 +39,7 @@ APIs (SunriseSunset.io and Nominatim) must never be called from tests.
 
 - Tests run offline and fast, and every PR shows whether behavior, style or dependencies broke.
 - First tests are characterization tests of the current behavior; known bugs are fixed later with
-  their own failing tests (tasks T5 and T6).
+  their own failing tests.
 - Audits can fail CI when a new advisory appears even if the code did not change; the fix is a
   dependency bump in its own commit.
 - The browser flow is checked by hand; if the UI grows beyond one screen, revisit end-to-end tests.
