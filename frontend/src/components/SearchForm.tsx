@@ -6,7 +6,7 @@ import type { SunCycleResponse } from "../api/types";
 import { searchError, type SearchError } from "../lib/errors";
 
 interface SearchFormProps {
-  setResults: (results: SunCycleResponse | null) => void;
+  setResults: (results: SunCycleResponse) => void;
   // One row on top of the results instead of the centered start card.
   compact?: boolean;
 }
@@ -41,8 +41,8 @@ function SearchForm({ setResults, compact = false }: SearchFormProps) {
     try {
       setResults(await fetchSunCycle({ location, start_date: startDate, end_date: endDate }));
     } catch (err) {
+      // The previous results stay on screen under the error, so a typo doesn't lose them.
       setError(searchError(err));
-      setResults(null);
     } finally {
       setLoading(false);
     }
