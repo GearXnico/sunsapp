@@ -100,6 +100,14 @@ describe("Results", () => {
     expect(rows[2]).toHaveTextContent("19:05—");
   });
 
+  it("lets keyboard users scroll the table when it is wider than the screen", () => {
+    render(<Results data={sunCycle} />);
+
+    const region = screen.getByRole("region", { name: "Table of all days" });
+    expect(region).toHaveAttribute("tabindex", "0");
+    expect(region).toContainElement(screen.getByRole("table"));
+  });
+
   it("shows a dash for missing times", () => {
     render(<Results data={sunCyclePolarNight} />);
 
