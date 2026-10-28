@@ -83,6 +83,23 @@ describe("Results", () => {
     expect(rows[2]).toHaveTextContent("2026-09-0608:2019:4019:05UTC−3");
   });
 
+  it("leaves the offset out of the zone when the API did not send it", () => {
+    const days = sunCycle.days.map((day) => ({ ...day, utc_offset: null }));
+    render(<Results data={{ ...sunCycle, days }} />);
+
+    expect(screen.getByText("Times in America/Santiago")).toBeInTheDocument();
+    expect(screen.queryByText(/UTC/)).not.toBeInTheDocument();
+  });
+
+  it("shows a dash for a missing offset in a range whose offset changes", () => {
+    const [first, second] = sunCycleDstChange.days;
+    render(<Results data={{ ...sunCycleDstChange, days: [first!, { ...second!, utc_offset: null }] }} />);
+
+    const rows = screen.getAllByRole("row");
+    expect(rows[1]).toHaveTextContent("UTC−4");
+    expect(rows[2]).toHaveTextContent("19:05—");
+  });
+
   it("shows a dash for missing times", () => {
     render(<Results data={sunCyclePolarNight} />);
 
