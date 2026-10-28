@@ -53,4 +53,16 @@ describe("ResultsChart", () => {
     expect(label(item(0, 441))).toBe("Sunrise: 07:21 America/Santiago (UTC−4)");
     expect(label(item(1, 500))).toBe("Sunrise: 08:20 America/Santiago (UTC−3)");
   });
+
+  it("leaves the offset out of the tooltip when the API did not send it", () => {
+    const days = sunCycleDstChange.days.map((day) => ({ ...day, utc_offset: null }));
+    render(<ResultsChart data={{ ...sunCycleDstChange, days }} />);
+    const label = lineProps.current!.options.plugins!.tooltip!.callbacks!.label as (
+      item: TooltipItem<"line">,
+    ) => string;
+
+    const item = { dataIndex: 0, parsed: { x: 0, y: 441 }, dataset: { label: "Sunrise" } };
+
+    expect(label(item as unknown as TooltipItem<"line">)).toBe("Sunrise: 07:21 America/Santiago");
+  });
 });
