@@ -4,6 +4,12 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [Unreleased]
+
+### Fixed
+
+- On a phone the day sky band shows the whole 24 hours instead of scrolling sideways from midnight to noon; the hour labels keep their size and show every six hours.
+
 ## [1.2.2] - 2026-10-24
 
 ### Changed
