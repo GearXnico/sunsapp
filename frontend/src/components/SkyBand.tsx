@@ -10,6 +10,7 @@ interface SkyBandProps {
 // Drawing area: 24 hours across 800 units, band on the horizon at y = 118.
 const LEFT = 40;
 const WIDTH = 800;
+const VIEW_WIDTH = 880;
 const HORIZON = 118;
 const BAND_HEIGHT = 30;
 const ARC_CONTROL_Y = -30;
@@ -34,44 +35,55 @@ function SkyBand({ day }: SkyBandProps) {
       : null;
 
   return (
-    <svg className="sky-band" viewBox="0 0 880 172" width="100%" role="img" aria-label={skyDescription(day)}>
-      <defs>
-        <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" className="sky-fill-top" />
-          <stop offset="1" className="sky-fill-bottom" />
-        </linearGradient>
-      </defs>
-      {arc && (
-        <>
-          <path className="sky-arc-fill" d={`${arc} Z`} fill={`url(#${fillId})`} />
-          <path className="sky-arc" d={arc} />
-          <g className="sky-sun" transform={`translate(${x(noon!)} ${SUN_Y})`}>
-            <circle r="12" />
-            <path d={RAYS} />
-          </g>
-        </>
-      )}
-      <rect className="sky-unknown" x={LEFT} y={HORIZON} width={WIDTH} height={BAND_HEIGHT} rx="6" />
-      {dayStages(day).map((stage) => (
-        <rect
-          key={`${stage.name}-${stage.start}`}
-          className={`sky-${stage.color}`}
-          x={x(stage.start)}
-          y={HORIZON}
-          width={x(stage.end) - x(stage.start)}
-          height={BAND_HEIGHT}
-        />
-      ))}
-      <rect className="sky-frame" x={LEFT} y={HORIZON} width={WIDTH} height={BAND_HEIGHT} rx="6" />
-      {[70, 810].map((moonX) => (
-        <path key={moonX} className="sky-moon" transform={`translate(${moonX} 84)`} d={MOON} />
-      ))}
-      {HOUR_TICKS.map((hour) => (
-        <text key={hour} className="sky-muted" x={x(hour * 60)} y="166" fontSize="11" textAnchor="middle">
-          {formatTime(hour * 60)}
-        </text>
-      ))}
-    </svg>
+    <div className="sky">
+      <svg
+        className="sky-band"
+        viewBox={`0 0 ${VIEW_WIDTH} 152`}
+        width="100%"
+        role="img"
+        aria-label={skyDescription(day)}
+      >
+        <defs>
+          <linearGradient id={fillId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" className="sky-fill-top" />
+            <stop offset="1" className="sky-fill-bottom" />
+          </linearGradient>
+        </defs>
+        {arc && (
+          <>
+            <path className="sky-arc-fill" d={`${arc} Z`} fill={`url(#${fillId})`} />
+            <path className="sky-arc" d={arc} />
+            <g className="sky-sun" transform={`translate(${x(noon!)} ${SUN_Y})`}>
+              <circle r="12" />
+              <path d={RAYS} />
+            </g>
+          </>
+        )}
+        <rect className="sky-unknown" x={LEFT} y={HORIZON} width={WIDTH} height={BAND_HEIGHT} rx="6" />
+        {dayStages(day).map((stage) => (
+          <rect
+            key={`${stage.name}-${stage.start}`}
+            className={`sky-${stage.color}`}
+            x={x(stage.start)}
+            y={HORIZON}
+            width={x(stage.end) - x(stage.start)}
+            height={BAND_HEIGHT}
+          />
+        ))}
+        <rect className="sky-frame" x={LEFT} y={HORIZON} width={WIDTH} height={BAND_HEIGHT} rx="6" />
+        {[70, 810].map((moonX) => (
+          <path key={moonX} className="sky-moon" transform={`translate(${moonX} 84)`} d={MOON} />
+        ))}
+      </svg>
+      {/* HTML, not SVG text: the drawing scales down on a phone and the labels keep their size. */}
+      <div className="sky-hours" aria-hidden="true">
+        {HOUR_TICKS.map((hour) => (
+          <span key={hour} style={{ left: `${(x(hour * 60) / VIEW_WIDTH) * 100}%` }}>
+            {formatTime(hour * 60)}
+          </span>
+        ))}
+      </div>
+    </div>
   );
 }
 

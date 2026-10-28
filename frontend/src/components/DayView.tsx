@@ -60,9 +60,7 @@ function DayView({ data, selected, onSelect }: DayViewProps) {
           )}
         </span>
       </div>
-      <div className="day-scroll">
-        <SkyBand day={day} />
-      </div>
+      <SkyBand day={day} />
       <KeyTimes day={day} />
     </section>
   );
