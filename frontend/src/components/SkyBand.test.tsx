@@ -36,6 +36,12 @@ describe("SkyBand", () => {
     }
   });
 
+  it("keeps the hour labels outside the drawing so they stay readable when it shrinks", () => {
+    render(<SkyBand day={santiago} />);
+
+    expect(screen.getByText("12:00").closest("svg")).toBeNull();
+  });
+
   it("draws no stages or arc when the sun does not rise", () => {
     const { container } = render(<SkyBand day={sunCyclePolarNight.days[0]!} />);
 
