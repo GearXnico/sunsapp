@@ -32,6 +32,24 @@ describe("App", () => {
     expect(screen.getByRole("form", { name: "Search" })).toHaveClass("inline");
   });
 
+  it("keeps the previous results when a new search fails", async () => {
+    vi.mocked(fetchSunCycle).mockResolvedValueOnce(sunCycle).mockRejectedValueOnce(new Error("Network Error"));
+    vi.spyOn(console, "error").mockImplementation(() => {});
+    const user = userEvent.setup();
+    render(<App />);
+
+    await user.type(screen.getByLabelText("Location"), "Santiago");
+    await user.type(screen.getByLabelText("From"), "2026-06-21");
+    await user.type(screen.getByLabelText("To"), "2026-06-22");
+    await user.click(screen.getByRole("button", { name: "Search" }));
+    await screen.findByRole("table");
+    await user.click(screen.getByRole("button", { name: "Search" }));
+
+    expect(await screen.findByRole("alert")).toBeInTheDocument();
+    expect(screen.getByRole("table")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Santiago" })).toBeInTheDocument();
+  });
+
   it("credits SunriseSunset.io and Nominatim in the footer", () => {
     render(<App />);
 
