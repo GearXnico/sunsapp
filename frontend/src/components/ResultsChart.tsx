@@ -39,7 +39,7 @@ const ResultsChart = ({ data }: ResultsChartProps) => {
         callbacks: {
           label: (context) => {
             const day = days[context.dataIndex];
-            const offset = day ? ` (${formatUtcOffset(day.utc_offset)})` : "";
+            const offset = day && day.utc_offset !== null ? ` (${formatUtcOffset(day.utc_offset)})` : "";
             const time = formatTime(context.parsed.y ?? 0);
             return `${context.dataset.label}: ${time} ${timezone}${offset}`;
           },
