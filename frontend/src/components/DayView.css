@@ -56,15 +56,29 @@ button.round {
   font-weight: 600;
 }
 
-.day-scroll {
-  overflow-x: auto;
-}
-
 /* Sky band (SkyBand) */
 .sky-band {
   display: block;
-  min-width: 520px;
+}
+
+.sky-hours {
+  position: relative;
+  height: 16px;
+  color: var(--muted);
   font-family: var(--mono);
+  font-size: 11px;
+}
+
+.sky-hours span {
+  position: absolute;
+  transform: translateX(-50%);
+}
+
+/* On a phone, every six hours is enough and the labels don't touch. */
+@media (max-width: 480px) {
+  .sky-hours span:nth-child(even) {
+    display: none;
+  }
 }
 
 .sky-unknown {
@@ -90,10 +104,6 @@ button.round {
 .sky-frame {
   fill: none;
   stroke: var(--line);
-}
-
-.sky-muted {
-  fill: var(--muted);
 }
 
 .sky-moon {
