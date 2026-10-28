@@ -151,7 +151,8 @@ button:disabled {
 
 button:focus-visible,
 input:focus-visible,
-a:focus-visible {
+a:focus-visible,
+.table-wrap:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
