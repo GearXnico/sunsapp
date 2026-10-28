@@ -1,6 +1,6 @@
 // GET /api/sun_cycle response (contract v3). Times are local to `timezone`, 24-hour "HH:MM",
 // and may be null (polar day or night, or a value SunriseSunset.io did not send).
-// `utc_offset` is minutes from UTC for that day.
+// `utc_offset` is minutes from UTC for that day, or null if SunriseSunset.io did not send it.
 export interface SunCycleDay {
   date: string;
   // Start of morning twilight
@@ -16,7 +16,7 @@ export interface SunCycleDay {
   dusk: string | null;
   // End of evening twilight
   last_light: string | null;
-  utc_offset: number;
+  utc_offset: number | null;
 }
 
 export interface SunCycleResponse {
