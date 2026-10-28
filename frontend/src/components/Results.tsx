@@ -50,7 +50,7 @@ function Results({ data }: ResultsProps) {
             <ExportCsvButton data={data} />
           </div>
         </div>
-        <div className="table-wrap">
+        <div className="table-wrap" role="region" aria-label="Table of all days" tabIndex={0}>
           <table>
             <thead>
               <tr>
