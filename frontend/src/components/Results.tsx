@@ -21,9 +21,9 @@ function Results({ data }: ResultsProps) {
   // A DST change inside the range gives days with different offsets: show it per row.
   const offsets = new Set(days.map((day) => day.utc_offset));
   const offsetPerRow = offsets.size > 1;
-  const zoneLabel = offsetPerRow
-    ? `Times in ${timezone}`
-    : `Times in ${timezone} (${formatUtcOffset(days[0]?.utc_offset ?? 0)})`;
+  const sharedOffset = offsetPerRow ? null : (days[0]?.utc_offset ?? null);
+  const zoneLabel =
+    sharedOffset === null ? `Times in ${timezone}` : `Times in ${timezone} (${formatUtcOffset(sharedOffset)})`;
 
   return (
     <>
@@ -68,7 +68,7 @@ function Results({ data }: ResultsProps) {
                   <td>{day.sunrise ?? EMPTY}</td>
                   <td>{day.sunset ?? EMPTY}</td>
                   <td>{day.golden_hour ?? EMPTY}</td>
-                  {offsetPerRow && <td>{formatUtcOffset(day.utc_offset)}</td>}
+                  {offsetPerRow && <td>{day.utc_offset === null ? EMPTY : formatUtcOffset(day.utc_offset)}</td>}
                 </tr>
               ))}
             </tbody>
