@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - A day without a UTC offset from SunriseSunset.io no longer shows as "UTC+0": the zone line leaves the offset out, the table shows "—" and the chart tooltip omits it.
 - A search that fails no longer wipes the results on screen: the error shows above them and they stay until a search succeeds.
 - On narrow screens the results table scrolls sideways with the keyboard too: its scroll area takes focus, shows the focus ring and has a name for screen readers.
+- On a phone the day sky band shows the whole 24 hours instead of scrolling sideways from midnight to noon; the hour labels keep their size and show every six hours.
 
 ## [1.2.3] - 2026-11-12
 
