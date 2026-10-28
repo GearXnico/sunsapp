@@ -120,7 +120,7 @@ describe("SearchForm", () => {
     expect(screen.getByLabelText("Location")).toHaveAttribute("aria-invalid", "true");
     expect(screen.getByLabelText("Location")).toHaveAccessibleDescription(/We couldn't find that place/);
     expect(screen.getByLabelText("From")).not.toHaveAttribute("aria-invalid");
-    expect(setResults).toHaveBeenCalledWith(null);
+    expect(setResults).not.toHaveBeenCalled();
   });
 
   it("marks the dates when the server rejects the range", async () => {
