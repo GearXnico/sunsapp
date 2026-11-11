@@ -4,6 +4,13 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [Unreleased]
+
+### Security
+
+- Rails 8.1.4.1, `rack` 3.2.8, `addressable` 2.9.2, `loofah` 2.25.3, `nokogiri` 1.19.7, `rails-html-sanitizer` 1.7.2 and `sqlite3` 2.10.2, which fix the advisories published since 1.2.2. Two reached the API: a spoofed client IP could get around the 20 searches per minute limit (Action Dispatch `RemoteIp`), and a multipart body could exhaust memory (`rack`).
+- `follow-redirects` 1.16.3 (through `axios`), which fixes a high advisory. It only runs in Node, not in the browser, but `npm audit` failed the frontend CI.
+
 ## [1.2.2] - 2026-10-24
 
 ### Changed
