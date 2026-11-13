@@ -15,6 +15,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Text sizes are in `rem` instead of `px`, so they follow the font size set in the browser. With the default size nothing changes on screen.
 
+### Security
+
+- In production the API only answers requests for its own host (`RENDER_EXTERNAL_HOSTNAME`), which blocks DNS rebinding and forged `Host` headers; the `/up` health check stays open.
+
 ## [1.2.4] - 2026-11-13
 
 ### Fixed
