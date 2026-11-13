@@ -9,6 +9,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Fixed
 
 - New places are geocoded at most once per second across all searches, as the Nominatim usage policy asks; cached places are not delayed.
+- The built page has a Content-Security-Policy: it only loads its own scripts, styles and images and only calls the API, which limits what an injected script could do.
+
+### Changed
+
+- Text sizes are in `rem` instead of `px`, so they follow the font size set in the browser. With the default size nothing changes on screen.
 
 ## [1.2.4] - 2026-11-13
 
