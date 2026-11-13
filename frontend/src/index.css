@@ -52,7 +52,7 @@ body {
   color: var(--fg);
   background-color: #142d4c;
   font-family: var(--font);
-  font-size: 15px;
+  font-size: 0.9375rem;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
