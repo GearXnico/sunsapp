@@ -1,0 +1,48 @@
+# Weekly dependency updates. The PRs go through the same checks as any other.
+# Minor and patch updates arrive in one PR per ecosystem; major ones in a separate PR each,
+# because they can break things and are best reviewed one by one.
+# cooldown: waits 7 days after a version is released before proposing it, in case it was malicious
+# and gets pulled. Dependabot security alerts don't wait.
+# target-branch: PRs go to `develop`, like any other change; Dependabot reads this file from `main`.
+# The Ruby base image is not listed: its tag comes from the RUBY_VERSION build argument.
+version: 2
+
+updates:
+  - package-ecosystem: bundler
+    directory: /backend
+    target-branch: develop
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+    groups:
+      bundler:
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm
+    directory: /frontend
+    target-branch: develop
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+    groups:
+      npm:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: develop
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    commit-message:
+      prefix: chore
+    groups:
+      actions:
+        update-types: [minor, patch]
