@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 ### Changed
 
 - Text sizes are in `rem` instead of `px`, so they follow the font size set in the browser. With the default size nothing changes on screen.
+- Dependabot proposes weekly updates for the backend gems, the frontend packages and the GitHub Actions, as PRs to `develop`; minor and patch updates come grouped, one PR per ecosystem.
 
 ### Security
 
