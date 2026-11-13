@@ -26,6 +26,8 @@ module ActiveSupport
       Geocoder::Lookup::Test.set_default_stub([])
       # The rate limiter keeps its counters in the boot-time cache store, so each test starts empty.
       Rails.cache.clear
+      # No pause between Nominatim requests; the geocoding client tests set their own pace.
+      SunCycle::GeocodingClient.min_interval = 0
     end
 
     teardown do
