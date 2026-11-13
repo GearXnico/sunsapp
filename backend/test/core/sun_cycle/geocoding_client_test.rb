@@ -73,4 +73,41 @@ class SunCycle::GeocodingClientTest < ActiveSupport::TestCase
     assert_equal 5, config.timeout
     assert_equal :all, config.always_raise
   end
+
+  test "waits until a second has passed since the previous request to Nominatim" do
+    Geocoder::Lookup::Test.add_stub("Tokyo", [ { "coordinates" => [ 35.6762, 139.6503 ] } ])
+    Geocoder::Lookup::Test.add_stub("Osaka", [ { "coordinates" => [ 34.6937, 135.5023 ] } ])
+    Geocoder::Lookup::Test.add_stub("Kyoto", [ { "coordinates" => [ 35.0116, 135.7681 ] } ])
+    clock = [ 100.0, 100.25, 101.0, 102.5, 102.5 ].each
+    pauses = []
+
+    with_pace(1.0, now: -> { clock.next }, pause: ->(seconds) { pauses << seconds }) do
+      SunCycle::GeocodingClient.place("Tokyo")
+      SunCycle::GeocodingClient.place("Osaka")
+      SunCycle::GeocodingClient.place("Kyoto")
+    end
+
+    assert_equal [ 0.75 ], pauses
+  end
+
+  test "does not wait for a place that is already cached" do
+    Geocoder::Lookup::Test.add_stub("Tokyo", [ { "coordinates" => [ 35.6762, 139.6503 ] } ])
+    pauses = []
+
+    with_pace(1.0, now: -> { 100.0 }, pause: ->(seconds) { pauses << seconds }) do
+      2.times { SunCycle::GeocodingClient.place("Tokyo") }
+    end
+
+    assert_empty pauses
+  end
+
+  private
+
+  def with_pace(interval, now:, pause:, &block)
+    SunCycle::GeocodingClient.min_interval = interval
+    SunCycle::GeocodingClient.instance_variable_set(:@last_request_at, nil)
+    SunCycle::GeocodingClient.stub(:now, now) { SunCycle::GeocodingClient.stub(:pause, pause, &block) }
+  ensure
+    SunCycle::GeocodingClient.min_interval = 0
+  end
 end
