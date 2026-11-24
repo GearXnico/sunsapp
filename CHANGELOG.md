@@ -4,6 +4,12 @@ All notable changes to sunsapp are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The versioning guide is at the end of this file.
 
+## [Unreleased]
+
+### Security
+
+- Puma 8.0.4 and msgpack 1.8.7 fix advisories reported by `bundler-audit`; in Puma, among others, slow clients that could hold worker threads or connections open.
+
 ## [1.2.5] - 2026-11-14
 
 ### Changed
