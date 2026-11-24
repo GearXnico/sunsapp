@@ -1,6 +1,6 @@
 # sunsapp backend
 
-Rails 8.1 API (Ruby 4.0.7) with one endpoint, `GET /api/sun_cycle`. It geocodes a place with Nominatim, gets the sun times from SunriseSunset.io and caches both for 30 days in `Rails.cache` (Solid Cache in production, the memory store in development). Contract: [docs/api.md](../docs/api.md).
+Rails 8.1 API (Ruby 4.0.10) with one endpoint, `GET /api/sun_cycle`. It geocodes a place with Nominatim, gets the sun times from SunriseSunset.io and caches both for 30 days in `Rails.cache` (Solid Cache in production, the memory store in development). Contract: [docs/api.md](../docs/api.md).
 
 ## Run
 
