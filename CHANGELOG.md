@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Security
 
+- Ruby goes from 4.0.7 to 4.0.10, which fixes a remote code execution vulnerability (CVE-2026-132825) that Brakeman now reports.
 - Puma 8.0.4 and msgpack 1.8.7 fix advisories reported by `bundler-audit`; in Puma, among others, slow clients that could hold worker threads or connections open.
 
 ## [1.2.5] - 2026-11-14
