@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 - Ruby goes from 4.0.7 to 4.0.10, which fixes a remote code execution vulnerability (CVE-2026-132825) that Brakeman now reports.
 - Puma 8.0.4 and msgpack 1.8.7 fix advisories reported by `bundler-audit`; in Puma, among others, slow clients that could hold worker threads or connections open.
+- The frontend lint tools (`eslint` 10.15 and `typescript-eslint` 8.74) now use `minimatch` 11.0.1 or later, which fixes a denial of service in glob matching (GHSA-g3hv-75wg-m249). Only development tooling used it; the built page is unchanged.
 
 ## [1.2.5] - 2026-11-14
 
